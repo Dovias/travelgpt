@@ -1,21 +1,12 @@
-import { useState } from 'react'
-import './App.css'
-
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>TravelGPT 🗺️</h1>
-      <div>
-        <p>
-          Hello world from the travelgpt client!
-        </p>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+    <div className="w-screen h-screen flex justify-center items-center bg-neutral-800 text-white">
+      <div className="text-center">
+        <h1 className="m-1 text-5xl font-bold">TravelGPT 🗺️</h1>
+        <p className="m-1"> Hello world from the travelgpt client!</p>
       </div>
-    </>
+    </div>
+
   )
 }
 
