@@ -1,17 +1,36 @@
-var builder = WebApplication.CreateBuilder(args);
-builder.Services
-    .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
-    .AddControllers();
+using TravelGPT.Services.Chat;
+using TravelGPT.Services.Chat.Gemini;
+using static TravelGPT.Services.Chat.IChat;
 
-var app = builder.Build();
+namespace TravelGPT;
 
-if (app.Environment.IsDevelopment())
+internal class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services
+            .AddSingleton<IChatService, ChatInMemoryService>(provider => new ChatInMemoryService(id => new InMemoryChat(new HashSet<Action<MessageContext>>() { GeminiChat.ReplyToMessage }) { Id = id }))
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen()
+            .AddDistributedMemoryCache()
+            .AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            })
+            .AddControllers();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
 
-app.MapControllers();
-
-app.Run();
