@@ -1,3 +1,5 @@
+using TravelGPT.Models.Chat;
+
 namespace TravelGPT.Services.Chat;
 
 public class ChatInMemoryService : IChatService
@@ -26,6 +28,7 @@ public class ChatInMemoryService : IChatService
     {
         return CreateNewChat(Guid.NewGuid());
     }
+
     public IChat GetExistingChat(Guid id)
     {
         return _chats[id];
