@@ -9,19 +9,17 @@ namespace TravelGPT.Controllers.Api.V1.Chat;
 [Route("/api/v1/[controller]")]
 public class ChatController(IChatService service) : ControllerBase
 {
-    private readonly IChatService _service = service;
-
     [HttpPost]
     public IActionResult CreateNewChat()
     {
-        return Ok(_service.CreateNewChat());
+        return Ok(service.CreateNewChat());
     }
 
 
     [HttpPost("{id}")]
     public async Task<IActionResult> SendChatMessage(Guid id, Message message)
     {
-        IChat? chat = _service.GetExistingChat(id);
+        IChat? chat = service.GetExistingChat(id);
         if (chat == null)
         {
             return NotFound();

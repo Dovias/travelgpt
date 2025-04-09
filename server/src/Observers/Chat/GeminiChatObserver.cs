@@ -5,9 +5,6 @@ namespace TravelGPT.Observers.Chat;
 
 public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<MessageContext>
 {
-    private readonly HttpClient _httpClient = httpClient;
-    private readonly string _apiKey = apiKey;
-
     public required Guid Id { get; init; }
 
     public void OnCompleted() { }
@@ -34,8 +31,8 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         }
         };
 
-        var response = await _httpClient.PostAsJsonAsync(
-            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}",
+        var response = await httpClient.PostAsJsonAsync(
+            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
             payload
         );
 
