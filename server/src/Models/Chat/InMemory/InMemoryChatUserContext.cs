@@ -6,18 +6,14 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
 
     public required int Id { get; init; }
 
-    private IDictionary<int, IUserChatContext>? Contexts
+    private IDictionary<int, IUserChatContext>? Users
     {
-        get
-        {
-            IDictionary<int, IUserChatContext>? contexts;
-            return users.TryGetTarget(out contexts) ? contexts : null;
-        }
+        get => users.TryGetTarget(out IDictionary<int, IUserChatContext>? contexts) ? contexts : null;
     }
 
     public IUserChatMessageContext SendMessage(string text)
     {
-        if (!Contexts?.ContainsKey(Id) ?? false)
+        if (!Users?.ContainsKey(Id) ?? false)
         {
             throw new ObjectDisposedException("Attempt to send chat message with already disposed user context");
         }
@@ -48,7 +44,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
 
     public void Dispose()
     {
-        Contexts?.Remove(Id);
+        Users?.Remove(Id);
     }
 
 }

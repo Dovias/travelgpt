@@ -1,6 +1,5 @@
 using TravelGPT.Models.Chat;
 using TravelGPT.Models.Chat.InMemory;
-using TravelGPT.Services.Chat;
 
 namespace TravelGPT;
 
@@ -10,13 +9,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddSingleton<IChatService, ChatInMemoryService>(provider => new ChatInMemoryService(id => new InMemoryChat(
-                new Dictionary<int, IUserChatContext>(),
-                new Dictionary<int, IUserChatMessageContext>(),
-                new HashSet<IObserver<IUserChatMessageContext>>()
-            )
-            { Id = id }
-            ))
+            .AddSingleton<IChatService, InMemoryChatService>(provider => new InMemoryChatService(new Dictionary<int, IChatContext>(), 0))
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddDistributedMemoryCache()

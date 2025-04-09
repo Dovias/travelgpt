@@ -2,7 +2,7 @@ namespace TravelGPT.Models.Chat.InMemory;
 
 public class InMemoryChatUserMessageContext(WeakReference<IDictionary<int, IUserChatMessageContext>> contexts) : IUserChatMessageContext
 {
-    private IDictionary<int, IUserChatMessageContext>? Contexts
+    private IDictionary<int, IUserChatMessageContext>? Messages
     {
         get
         {
@@ -16,7 +16,7 @@ public class InMemoryChatUserMessageContext(WeakReference<IDictionary<int, IUser
 
     public void Dispose()
     {
-        Contexts?.Remove(Id);
+        Messages?.Remove(Id);
     }
 }
 
