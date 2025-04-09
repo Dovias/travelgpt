@@ -23,6 +23,13 @@ public class ChatController(IChatService service, IConfiguration configuration) 
         return Ok(context);
     }
 
+    [HttpGet("{id}")]
+    public IActionResult GetChat(int id)
+    {
+        IChatContext? context = service.GetChat(id);
+        return context == null ? NotFound() : Ok(context);
+    }
+
     [HttpPost("{id}")]
     public async Task<IActionResult> SendChatMessage(int id, InMemoryMessage message)
     {
