@@ -30,6 +30,19 @@ public class ChatController(IChatService service, IConfiguration configuration) 
         return context == null ? NotFound() : Ok(context);
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeleteChat(int id)
+    {
+        IChatContext? context = service.GetChat(id);
+        if (context == null)
+        {
+            return NotFound();
+        }
+
+        context.Dispose();
+        return Ok();
+    }
+
     [HttpPost("{id}")]
     public async Task<IActionResult> SendChatMessage(int id, InMemoryMessage message)
     {
