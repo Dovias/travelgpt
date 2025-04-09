@@ -4,15 +4,11 @@ public class InMemoryChatMessageContext(WeakReference<IDictionary<int, IChatMess
 {
     private IDictionary<int, IChatMessageContext>? Messages
     {
-        get
-        {
-            IDictionary<int, IChatMessageContext>? messages;
-            return contexts.TryGetTarget(out messages) ? messages : null;
-        }
+        get => contexts.TryGetTarget(out IDictionary<int, IChatMessageContext>? messages) ? messages : null;
     }
 
     public required int Id { get; init; }
-    public required DateTime CreatedAt { get; init; }
+    public required DateTime Created { get; init; }
     public required IUserChatContext User { get; init; }
     public required IChatMessage Message { get; init; }
 

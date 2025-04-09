@@ -21,7 +21,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
         InMemoryChatMessageContext context = new(new WeakReference<IDictionary<int, IChatMessageContext>>(messages))
         {
             Id = Counter++,
-            CreatedAt = DateTime.Now,
+            Created = DateTime.Now,
             User = this,
             Message = new InMemoryChatMessage()
             {
