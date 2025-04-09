@@ -3,7 +3,7 @@ using TravelGPT.Models.Chat;
 
 namespace TravelGPT.Observers.Chat;
 
-public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IUserChatMessageContext>
+public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IChatMessageContext>
 {
     public required IUserChatContext User { get; init; }
 
@@ -11,9 +11,9 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
 
     public void OnError(Exception error) { }
 
-    public async void OnNext(IUserChatMessageContext context)
+    public async void OnNext(IChatMessageContext context)
     {
-        if (context.Message.User.Id == User.Id)
+        if (context.User.Id == User.Id)
         {
             return;
         }

@@ -1,9 +1,9 @@
 namespace TravelGPT.Models.Chat.InMemory;
 
-public class InMemoryChat(IDictionary<int, IUserChatContext> users, IDictionary<int, IUserChatMessageContext> messages, ISet<IObserver<IUserChatMessageContext>> observers) : IChat
+public class InMemoryChat(IDictionary<int, IUserChatContext> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IChat
 {
     public IEnumerable<IUserChatContext> Users => users.Values;
-    public IEnumerable<IUserChatMessageContext> Messages => messages.Values;
+    public IEnumerable<IChatMessageContext> Messages => messages.Values;
 
     public IUserChatContext AddUser(int id)
     {
@@ -19,12 +19,12 @@ public class InMemoryChat(IDictionary<int, IUserChatContext> users, IDictionary<
 
     public IUserChatContext? GetUser(int id) => users[id];
 
-    private class RegisteredChatObserver(ISet<IObserver<IUserChatMessageContext>> observers, IObserver<IUserChatMessageContext> observer) : IDisposable
+    private class RegisteredChatObserver(ISet<IObserver<IChatMessageContext>> observers, IObserver<IChatMessageContext> observer) : IDisposable
     {
         public void Dispose() => observers.Remove(observer);
     }
 
-    public IDisposable Subscribe(IObserver<IUserChatMessageContext> observer)
+    public IDisposable Subscribe(IObserver<IChatMessageContext> observer)
     {
         if (!observers.Add(observer))
         {

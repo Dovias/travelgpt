@@ -9,8 +9,8 @@ public class InMemoryChatService(IDictionary<int, IChatContext> chats, int count
             Id = counter++,
             Chat = new InMemoryChat(
                 new Dictionary<int, IUserChatContext>(),
-                new Dictionary<int, IUserChatMessageContext>(),
-                new HashSet<IObserver<IUserChatMessageContext>>()
+                new Dictionary<int, IChatMessageContext>(),
+                new HashSet<IObserver<IChatMessageContext>>()
             )
         };
 

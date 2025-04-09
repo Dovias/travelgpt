@@ -4,5 +4,5 @@ public interface IUserChatContext : IDisposable
 {
     int Id { get; }
 
-    IUserChatMessageContext SendMessage(string text);
+    IChatMessageContext SendMessage(string text);
 }

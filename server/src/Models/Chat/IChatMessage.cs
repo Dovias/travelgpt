@@ -1,6 +1,6 @@
 namespace TravelGPT.Models.Chat;
 
-public interface IChatMessage : IMessage
+public interface IChatMessage
 {
-    DateTime CreatedAt { get; }
+    string Text { get; }
 }

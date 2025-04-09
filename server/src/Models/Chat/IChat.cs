@@ -1,9 +1,9 @@
 namespace TravelGPT.Models.Chat;
 
-public interface IChat : IObservable<IUserChatMessageContext>
+public interface IChat : IObservable<IChatMessageContext>
 {
     IEnumerable<IUserChatContext> Users { get; }
-    IEnumerable<IUserChatMessageContext> Messages { get; }
+    IEnumerable<IChatMessageContext> Messages { get; }
 
     IUserChatContext AddUser(int id);
     IUserChatContext? GetUser(int id);

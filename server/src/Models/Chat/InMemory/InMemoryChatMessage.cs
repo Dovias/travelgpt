@@ -1,7 +1,6 @@
-
 namespace TravelGPT.Models.Chat.InMemory;
 
-public record InMemoryChatMessage : InMemoryMessage, IChatMessage
+public record InMemoryChatMessage : IChatMessage
 {
-    public required DateTime CreatedAt { get; init; }
+    public required string Text { get; init; }
 }

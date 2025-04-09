@@ -44,7 +44,7 @@ public class ChatController(IChatService service, IConfiguration configuration) 
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> SendChatMessage(int id, InMemoryMessage message)
+    public async Task<IActionResult> SendChatMessage(int id, InMemoryChatMessage message)
     {
         IChatContext? context = service.GetChat(id);
         if (context == null)
@@ -57,12 +57,12 @@ public class ChatController(IChatService service, IConfiguration configuration) 
         return Ok(await WaitForChatMessage(chat));
     }
 
-    private static async Task<IUserChatMessageContext> WaitForChatMessage(IChat chat)
+    private static async Task<IChatMessageContext> WaitForChatMessage(IChat chat)
     {
-        TaskCompletionSource<IUserChatMessageContext> source = new();
+        TaskCompletionSource<IChatMessageContext> source = new();
         IDisposable disposable = chat.Subscribe(new ChatResponseTaskObserver(source));
 
-        IUserChatMessageContext context = await source.Task;
+        IChatMessageContext context = await source.Task;
         disposable.Dispose();
 
         return context;
