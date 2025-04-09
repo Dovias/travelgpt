@@ -1,5 +1,5 @@
 using TravelGPT.Models.Chat;
-using TravelGPT.Observers.Chat;
+using TravelGPT.Models.Chat.InMemory;
 using TravelGPT.Services.Chat;
 
 namespace TravelGPT;
@@ -10,14 +10,12 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddSingleton<IChatService, ChatInMemoryService>(provider => new ChatInMemoryService(id =>
-                new InMemoryChat(
-                    new HashSet<IObserver<MessageContext>>() {
-                        new GeminiChatObserver(new HttpClient(), builder.Configuration["GeminiApiKey"]!) { Id = Guid.NewGuid() }
-                    },
-                    []
-                )
-                { Id = id }
+            .AddSingleton<IChatService, ChatInMemoryService>(provider => new ChatInMemoryService(id => new InMemoryChat(
+                new Dictionary<int, IUserChatContext>(),
+                new Dictionary<int, IUserChatMessageContext>(),
+                new HashSet<IObserver<IUserChatMessageContext>>()
+            )
+            { Id = id }
             ))
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()

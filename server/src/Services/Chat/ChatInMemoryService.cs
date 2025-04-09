@@ -12,24 +12,24 @@ public class ChatInMemoryService : IChatService
         _chatFactory = chatFactory;
     }
 
-    private IChat CreateNewChat(IChat chat)
+    private IChat CreateChat(IChat chat)
     {
         _chats[chat.Id] = chat;
 
         return chat;
     }
 
-    private IChat CreateNewChat(Guid id)
+    private IChat CreateChat(Guid id)
     {
-        return CreateNewChat(_chatFactory(id));
+        return CreateChat(_chatFactory(id));
     }
 
-    public IChat CreateNewChat()
+    public IChat CreateChat()
     {
-        return CreateNewChat(Guid.NewGuid());
+        return CreateChat(Guid.NewGuid());
     }
 
-    public IChat GetExistingChat(Guid id)
+    public IChat GetChat(Guid id)
     {
         return _chats[id];
     }

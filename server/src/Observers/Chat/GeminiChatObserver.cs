@@ -3,17 +3,17 @@ using TravelGPT.Models.Chat;
 
 namespace TravelGPT.Observers.Chat;
 
-public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<MessageContext>
+public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IUserChatMessageContext>
 {
-    public required Guid Id { get; init; }
+    public required IUserChatContext User { get; init; }
 
     public void OnCompleted() { }
 
     public void OnError(Exception error) { }
 
-    public async void OnNext(MessageContext context)
+    public async void OnNext(IUserChatMessageContext context)
     {
-        if (context.Message.Author == Id)
+        if (context.Message.User.Id == User.Id)
         {
             return;
         }
@@ -42,6 +42,6 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         }
 
         var data = (await response.Content.ReadFromJsonAsync<dynamic>())!;
-        context.Chat.AddMessage(new Message(Id, data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString()));
+        User.SendMessage(data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
     }
 }
