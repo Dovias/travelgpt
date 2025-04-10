@@ -4,14 +4,11 @@ public class InMemoryChatService(IDictionary<int, IChatContext> chats, int count
 {
     public IChatContext CreateChat()
     {
-        InMemoryChatContext context = new(new WeakReference<IDictionary<int, IChatContext>>(chats))
-        {
-            Id = counter++,
-            Chat = new InMemoryChat(
-                new Dictionary<int, IUserChatContext>(),
+        InMemoryChatContext context = new(new WeakReference<IDictionary<int, IChatContext>>(chats), new Dictionary<int, IUserChatContext>(),
                 new Dictionary<int, IChatMessageContext>(),
-                new HashSet<IObserver<IChatMessageContext>>()
-            )
+                new HashSet<IObserver<IChatMessageContext>>())
+        {
+            Id = counter++
         };
 
         chats.Add(context.Id, context);

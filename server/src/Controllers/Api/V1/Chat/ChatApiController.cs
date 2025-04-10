@@ -15,12 +15,11 @@ public class ChatController(IChatService service, IConfiguration configuration) 
     [HttpPost]
     public IActionResult CreateChat()
     {
-        IChatContext context = service.CreateChat();
-        IChat chat = context.Chat;
+        IChatContext chat = service.CreateChat();
         chat.AddUser(clientUserId);
         chat.Subscribe(new GeminiChatObserver(new HttpClient(), configuration["GeminiApiKey"]!) { User = chat.AddUser(serverUserId) });
 
-        return Ok(context);
+        return Ok(chat);
     }
 
     [HttpGet("{id}")]
@@ -46,18 +45,17 @@ public class ChatController(IChatService service, IConfiguration configuration) 
     [HttpPost("{id}")]
     public async Task<IActionResult> SendChatMessage(int id, InMemoryChatMessage message)
     {
-        IChatContext? context = service.GetChat(id);
-        if (context == null)
+        IChatContext? chat = service.GetChat(id);
+        if (chat == null)
         {
             return NotFound();
         }
-        IChat chat = context.Chat;
         chat.GetUser(clientUserId)!.SendMessage(message.Text);
 
         return Ok(await WaitForChatMessage(chat));
     }
 
-    private static async Task<IChatMessageContext> WaitForChatMessage(IChat chat)
+    private static async Task<IChatMessageContext> WaitForChatMessage(IChatContext chat)
     {
         TaskCompletionSource<IChatMessageContext> source = new();
         IDisposable disposable = chat.Subscribe(new ChatResponseTaskObserver(source));
