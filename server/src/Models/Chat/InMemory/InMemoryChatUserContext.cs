@@ -11,7 +11,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
         get => users.TryGetTarget(out IDictionary<int, IUserChatContext>? contexts) ? contexts : null;
     }
 
-    public IChatMessageContext SendMessage(string text)
+    public IChatMessageContext SendMessage(ChatMessage message)
     {
         if (!Users?.ContainsKey(Id) ?? false)
         {
@@ -23,10 +23,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
             Id = Counter++,
             Created = DateTime.Now,
             User = this,
-            Message = new InMemoryChatMessage()
-            {
-                Text = text,
-            }
+            Message = message
         };
 
         messages.Add(context.Id, context);

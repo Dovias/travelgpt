@@ -43,14 +43,14 @@ public class ChatController(IChatService service, IConfiguration configuration) 
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> SendChatMessage(int id, InMemoryChatMessage message)
+    public async Task<IActionResult> SendChatMessage(int id, ChatMessage message)
     {
         IChatContext? chat = service.GetChat(id);
         if (chat == null)
         {
             return NotFound();
         }
-        chat.GetUser(clientUserId)!.SendMessage(message.Text);
+        chat.GetUser(clientUserId)!.SendMessage(message);
 
         return Ok(await WaitForChatMessage(chat));
     }

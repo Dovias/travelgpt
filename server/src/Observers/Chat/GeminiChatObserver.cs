@@ -1,5 +1,6 @@
 
 using TravelGPT.Models.Chat;
+using TravelGPT.Extensions.Chat;
 
 namespace TravelGPT.Observers.Chat;
 
@@ -42,6 +43,6 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         }
 
         var data = (await response.Content.ReadFromJsonAsync<dynamic>())!;
-        User.SendMessage(data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
+        User.SendMessage((string)data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
     }
 }

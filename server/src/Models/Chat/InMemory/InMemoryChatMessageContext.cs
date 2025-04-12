@@ -10,7 +10,7 @@ public class InMemoryChatMessageContext(WeakReference<IDictionary<int, IChatMess
     public required int Id { get; init; }
     public required DateTime Created { get; init; }
     public required IUserChatContext User { get; init; }
-    public required IChatMessage Message { get; init; }
+    public required ChatMessage Message { get; init; }
 
     public void Dispose()
     {
