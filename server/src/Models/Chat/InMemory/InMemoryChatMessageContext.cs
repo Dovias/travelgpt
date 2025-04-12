@@ -12,9 +12,6 @@ public class InMemoryChatMessageContext(WeakReference<IDictionary<int, IChatMess
     public required IUserChatContext User { get; init; }
     public required ChatMessage Message { get; init; }
 
-    public void Dispose()
-    {
-        Messages?.Remove(Id);
-    }
+    public void Dispose() => Messages?.Remove(Id);
 }
 

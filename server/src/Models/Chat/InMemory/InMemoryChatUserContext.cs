@@ -39,10 +39,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatCon
         }
     }
 
-    public void Dispose()
-    {
-        Users?.Remove(Id);
-    }
+    public void Dispose() => Users?.Remove(Id);
 
 }
 

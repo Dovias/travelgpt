@@ -42,8 +42,5 @@ public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> c
         return new RegisteredChatObserver(observers, observer);
     }
 
-    public void Dispose()
-    {
-        Chats?.Remove(Id);
-    }
+    public void Dispose() => Chats?.Remove(Id);
 }
