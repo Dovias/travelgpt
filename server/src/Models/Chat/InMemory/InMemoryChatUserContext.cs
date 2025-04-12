@@ -1,19 +1,19 @@
 namespace TravelGPT.Models.Chat.InMemory;
 
-public class InMemoryChatUserContext(WeakReference<IDictionary<int, IUserChatContext>> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IUserChatContext
+public class InMemoryChatUserContext(WeakReference<IDictionary<int, IChatUserContext>> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IChatUserContext
 {
-    private static int Counter;
-
     public required int Id { get; init; }
 
-    private IDictionary<int, IUserChatContext>? Users
+    private IDictionary<int, IChatUserContext>? Users
     {
-        get => users.TryGetTarget(out IDictionary<int, IUserChatContext>? contexts) ? contexts : null;
+        get => users.TryGetTarget(out IDictionary<int, IChatUserContext>? contexts) ? contexts : null;
     }
+    private bool Disposed { get => !Users?.ContainsKey(Id) ?? false; }
+    private static int Counter;
 
     public IChatMessageContext SendMessage(ChatMessage message)
     {
-        if (!Users?.ContainsKey(Id) ?? false)
+        if (Disposed)
         {
             throw new ObjectDisposedException("Attempt to send chat message with already disposed user context");
         }

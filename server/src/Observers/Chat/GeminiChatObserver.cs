@@ -6,7 +6,7 @@ namespace TravelGPT.Observers.Chat;
 
 public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IChatMessageContext>
 {
-    public required IUserChatContext User { get; init; }
+    public required IChatUserContext User { get; init; }
 
     public void OnCompleted() { }
 

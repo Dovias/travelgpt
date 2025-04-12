@@ -1,7 +1,7 @@
 namespace TravelGPT.Models.Chat.InMemory;
 
 
-public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> chats, IDictionary<int, IUserChatContext> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IChatContext
+public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> chats, IDictionary<int, IChatUserContext> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IChatContext
 {
     private IDictionary<int, IChatContext>? Chats
     {
@@ -10,12 +10,12 @@ public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> c
 
     public required int Id { get; init; }
 
-    public IEnumerable<IUserChatContext> Users => users.Values;
+    public IEnumerable<IChatUserContext> Users => users.Values;
     public IEnumerable<IChatMessageContext> Messages => messages.Values;
 
-    public IUserChatContext AddUser(int id)
+    public IChatUserContext AddUser(int id)
     {
-        InMemoryChatUserContext context = new(new WeakReference<IDictionary<int, IUserChatContext>>(users), messages, observers)
+        InMemoryChatUserContext context = new(new WeakReference<IDictionary<int, IChatUserContext>>(users), messages, observers)
         {
             Id = id
         };
@@ -25,7 +25,7 @@ public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> c
         return context;
     }
 
-    public IUserChatContext? GetUser(int id) => users[id];
+    public IChatUserContext? GetUser(int id) => users[id];
 
     private class RegisteredChatObserver(ISet<IObserver<IChatMessageContext>> observers, IObserver<IChatMessageContext> observer) : IDisposable
     {

@@ -4,9 +4,9 @@ public interface IChatContext : IObservable<IChatMessageContext>, IDisposable
 {
     public int Id { get; }
 
-    IEnumerable<IUserChatContext> Users { get; }
+    IEnumerable<IChatUserContext> Users { get; }
     IEnumerable<IChatMessageContext> Messages { get; }
 
-    IUserChatContext AddUser(int id);
-    IUserChatContext? GetUser(int id);
+    IChatUserContext AddUser(int id);
+    IChatUserContext? GetUser(int id);
 }
