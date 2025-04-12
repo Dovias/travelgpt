@@ -9,7 +9,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddSingleton<IChatService, InMemoryChatService>(provider => new InMemoryChatService(new Dictionary<int, IChatContext>(), 0))
+            .AddSingleton<IChatService, InMemoryChatService>(provider => new InMemoryChatService(new Dictionary<int, IChatContext>()))
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddDistributedMemoryCache()

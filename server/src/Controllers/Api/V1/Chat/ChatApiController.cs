@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TravelGPT.Extensions.Chat;
 using TravelGPT.Models.Chat;
-using TravelGPT.Models.Chat.InMemory;
 using TravelGPT.Observers.Chat;
 
 namespace TravelGPT.Controllers.Api.V1.Chat;
@@ -15,9 +15,10 @@ public class ChatController(IChatService service, IConfiguration configuration) 
     [HttpPost]
     public IActionResult CreateChat()
     {
-        IChatContext chat = service.CreateChat();
-        chat.AddUser(clientUserId);
-        chat.Subscribe(new GeminiChatObserver(new HttpClient(), configuration["GeminiApiKey"]!) { User = chat.AddUser(serverUserId) });
+        var chat = service.CreateChat();
+        var participants = chat.Participants;
+        participants.Add(clientUserId);
+        chat.Messages.Subscribe(new GeminiChatObserver(new HttpClient(), configuration["GeminiApiKey"]!) { Participant = participants.Add(serverUserId) });
 
         return Ok(chat);
     }
@@ -50,19 +51,9 @@ public class ChatController(IChatService service, IConfiguration configuration) 
         {
             return NotFound();
         }
-        chat.GetUser(clientUserId)!.SendMessage(message);
 
-        return Ok(await WaitForChatMessage(chat));
+        chat.Participants.Get(clientUserId)!.SendMessage(message);
+        return Ok(await chat.Messages.Wait());
     }
 
-    private static async Task<IChatMessageContext> WaitForChatMessage(IChatContext chat)
-    {
-        TaskCompletionSource<IChatMessageContext> source = new();
-        IDisposable disposable = chat.Subscribe(new ChatResponseTaskObserver(source));
-
-        IChatMessageContext context = await source.Task;
-        disposable.Dispose();
-
-        return context;
-    }
 }

@@ -6,7 +6,7 @@ namespace TravelGPT.Observers.Chat;
 
 public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IChatMessageContext>
 {
-    public required IChatUserContext User { get; init; }
+    public required IChatParticipantContext Participant { get; init; }
 
     public void OnCompleted() { }
 
@@ -14,7 +14,7 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
 
     public async void OnNext(IChatMessageContext context)
     {
-        if (context.User.Id == User.Id)
+        if (context.Participant.Id == Participant.Id)
         {
             return;
         }
@@ -43,6 +43,6 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         }
 
         var data = (await response.Content.ReadFromJsonAsync<dynamic>())!;
-        User.SendMessage((string)data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
+        Participant.SendMessage((string)data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
     }
 }

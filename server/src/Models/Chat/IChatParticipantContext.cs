@@ -1,6 +1,6 @@
 namespace TravelGPT.Models.Chat;
 
-public interface IChatUserContext : IDisposable
+public interface IChatParticipantContext : IDisposable
 {
     int Id { get; }
 

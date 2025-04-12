@@ -1,14 +1,21 @@
+using System.Collections.ObjectModel;
+
 namespace TravelGPT.Models.Chat.InMemory;
 
-public class InMemoryChatService(IDictionary<int, IChatContext> chats, int counter) : IChatService
+public class InMemoryChatService(IDictionary<int, IChatContext> chats) : IChatService
 {
+    private static int Counter;
+
     public IChatContext CreateChat()
     {
-        InMemoryChatContext context = new(new WeakReference<IDictionary<int, IChatContext>>(chats), new Dictionary<int, IChatUserContext>(),
-                new Dictionary<int, IChatMessageContext>(),
-                new HashSet<IObserver<IChatMessageContext>>())
+        Dictionary<int, IChatMessageContext> contexts = [];
+        Collection<IObserver<IChatMessageContext>> observers = [];
+
+        InMemoryChatContext context = new(new WeakReference<IDictionary<int, IChatContext>>(chats))
         {
-            Id = counter++
+            Id = Counter++,
+            Participants = new InMemoryChatParticipantContextCollection(new Dictionary<int, IChatParticipantContext>(), [], contexts, observers),
+            Messages = new InMemoryChatMessageContextCollection(contexts, observers)
         };
 
         chats.Add(context.Id, context);

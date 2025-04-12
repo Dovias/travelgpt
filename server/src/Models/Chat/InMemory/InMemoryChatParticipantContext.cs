@@ -1,12 +1,12 @@
 namespace TravelGPT.Models.Chat.InMemory;
 
-public class InMemoryChatUserContext(WeakReference<IDictionary<int, IChatUserContext>> users, IDictionary<int, IChatMessageContext> messages, ISet<IObserver<IChatMessageContext>> observers) : IChatUserContext
+public class InMemoryChatParticipantContext(WeakReference<IDictionary<int, IChatParticipantContext>> users, IDictionary<int, IChatMessageContext> messages, ICollection<IObserver<IChatMessageContext>> observers) : IChatParticipantContext
 {
     public required int Id { get; init; }
 
-    private IDictionary<int, IChatUserContext>? Users
+    private IDictionary<int, IChatParticipantContext>? Users
     {
-        get => users.TryGetTarget(out IDictionary<int, IChatUserContext>? contexts) ? contexts : null;
+        get => users.TryGetTarget(out IDictionary<int, IChatParticipantContext>? contexts) ? contexts : null;
     }
     private bool Disposed { get => !Users?.ContainsKey(Id) ?? false; }
     private static int Counter;
@@ -22,7 +22,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IChatUserCon
         {
             Id = Counter++,
             Created = DateTime.Now,
-            User = this,
+            Participant = this,
             Message = message
         };
 
@@ -33,7 +33,7 @@ public class InMemoryChatUserContext(WeakReference<IDictionary<int, IChatUserCon
 
     private void NotifyObservers(IChatMessageContext context)
     {
-        foreach (var observer in observers)
+        foreach (var observer in observers.ToList())
         {
             observer.OnNext(context);
         }
