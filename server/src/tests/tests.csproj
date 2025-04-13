@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <AssemblyName>travelgpt-server-tests</AssemblyName>
+    <RootNamespace>TravelGPT.Server.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>TravelGPT.Server.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

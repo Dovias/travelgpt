@@ -1,4 +1,4 @@
-namespace TravelGPT.Models.Chat.InMemory;
+namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChatMessageContextObserverDisposable(ICollection<IObserver<IChatMessageContext>> observers, IObserver<IChatMessageContext> observer) : IDisposable
 {

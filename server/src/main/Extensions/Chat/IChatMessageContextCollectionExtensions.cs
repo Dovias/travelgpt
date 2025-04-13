@@ -1,7 +1,7 @@
-using TravelGPT.Models.Chat;
-using TravelGPT.Observers.Chat;
+using TravelGPT.Server.Models.Chat;
+using TravelGPT.Server.Observers.Chat;
 
-namespace TravelGPT.Extensions.Chat;
+namespace TravelGPT.Server.Extensions.Chat;
 
 public static class IChatMessageContextCollectionExtensions
 {

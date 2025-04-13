@@ -1,5 +1,4 @@
-namespace TravelGPT.Models.Chat.InMemory;
-
+namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChatContext(WeakReference<IDictionary<int, IChatContext>> reference) : IChatContext
 {

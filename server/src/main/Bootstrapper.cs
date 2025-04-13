@@ -1,9 +1,9 @@
-using TravelGPT.Models.Chat;
-using TravelGPT.Models.Chat.InMemory;
+using TravelGPT.Server.Models.Chat;
+using TravelGPT.Server.Models.Chat.InMemory;
 
-namespace TravelGPT;
+namespace TravelGPT.Server;
 
-internal class Program
+internal class Bootstrapper
 {
     public static void Main(string[] args)
     {

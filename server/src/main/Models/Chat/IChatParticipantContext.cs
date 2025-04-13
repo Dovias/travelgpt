@@ -1,4 +1,4 @@
-namespace TravelGPT.Models.Chat;
+namespace TravelGPT.Server.Models.Chat;
 
 public interface IChatParticipantContext : IDisposable
 {

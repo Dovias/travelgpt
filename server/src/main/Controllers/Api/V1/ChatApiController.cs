@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using TravelGPT.Extensions.Chat;
-using TravelGPT.Models.Chat;
-using TravelGPT.Observers.Chat;
+using TravelGPT.Server.Models.Chat;
+using TravelGPT.Server.Extensions.Chat;
+using TravelGPT.Server.Observers.Chat;
 
-namespace TravelGPT.Controllers.Api.V1.Chat;
+namespace TravelGPT.Server.Controllers.Api.V1;
 
 [ApiController]
 [Route("/api/v1/[controller]")]

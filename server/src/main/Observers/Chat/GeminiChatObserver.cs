@@ -1,8 +1,7 @@
+using TravelGPT.Server.Extensions.Chat;
+using TravelGPT.Server.Models.Chat;
 
-using TravelGPT.Models.Chat;
-using TravelGPT.Extensions.Chat;
-
-namespace TravelGPT.Observers.Chat;
+namespace TravelGPT.Server.Observers.Chat;
 
 public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IChatMessageContext>
 {

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace TravelGPT.Models.Chat.InMemory;
+namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChatMessageContextCollection(IDictionary<int, IChatMessageContext> messages, ICollection<IObserver<IChatMessageContext>> observers) : IChatMessageContextCollection
 {

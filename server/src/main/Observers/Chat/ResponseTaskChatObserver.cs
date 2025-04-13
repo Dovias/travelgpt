@@ -1,6 +1,6 @@
-using TravelGPT.Models.Chat;
+using TravelGPT.Server.Models.Chat;
 
-namespace TravelGPT.Observers.Chat;
+namespace TravelGPT.Server.Observers.Chat;
 
 public class ChatResponseTaskObserver(TaskCompletionSource<IChatMessageContext> source) : IObserver<IChatMessageContext>
 {
