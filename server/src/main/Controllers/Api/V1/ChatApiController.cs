@@ -44,8 +44,8 @@ public class ChatController(IChatRepository chats, IConfiguration config) : Cont
             return NotFound();
         }
 
-        chat.Add(0, request.Text);
-        IChatMessage message = (await chat.FirstAsync()).Message;
+        chat!.Add(0, request.Text);
+        IChatMessage message = (await chat!.FirstAsync()).Message;
         return Ok(new SentChatMessageResponse
         {
             Text = message.Text

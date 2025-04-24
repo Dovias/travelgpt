@@ -10,5 +10,5 @@ public interface IChat : IEnumerable<IChatMessage>, IObservable<IChatMessageCont
     bool TryGet(int id, out IChatMessage? message);
     bool Contains(int id);
 
-    public IChatMessage this[int id];
-    }
+    public IChatMessage this[int id] { get; }
+}
