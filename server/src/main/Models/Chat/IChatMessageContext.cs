@@ -1,10 +1,7 @@
 namespace TravelGPT.Server.Models.Chat;
 
-public interface IChatMessageContext : IDisposable
+public interface IChatMessageContext
 {
-    int Id { get; }
-
-    ChatMessage Message { get; }
-    DateTime Created { get; }
-    IChatParticipantContext Participant { get; }
+    IChat Chat { get; }
+    IChatMessage Message { get; }
 }

@@ -9,10 +9,33 @@ internal class Bootstrapper
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddSingleton<IChatService, InMemoryChatService>(provider => new InMemoryChatService(new Dictionary<int, IChatContext>()))
+            .AddSingleton<IChatRepository, InMemoryChatRepository>(provider =>
+                new InMemoryChatRepository(new Dictionary<int, IChat>(), id =>
+                    new InMemoryChat(
+                            new Dictionary<int, IChatMessage>(),
+                            [],
+                            (id, details) => new InMemoryChatMessage
+                            {
+                                Id = id,
+                                Author = new InMemoryChatParticipant
+                                {
+                                    Id = details.Author.Id
+                                },
+
+                                Text = details.Text,
+                                Created = DateTime.Now
+                            },
+                            (messages, message) => new InMemoryChatMessageContext
+                            {
+                                Chat = messages,
+                                Message = message
+                            }
+                    )
+                    { Id = id }
+                )
+            )
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
-            .AddDistributedMemoryCache()
             .AddRouting(options =>
             {
                 options.LowercaseUrls = true;
@@ -25,6 +48,12 @@ internal class Bootstrapper
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .SetIsOriginAllowed(origin => true)
+            );
         }
 
         app.MapControllers();

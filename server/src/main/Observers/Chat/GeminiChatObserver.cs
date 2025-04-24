@@ -3,17 +3,15 @@ using TravelGPT.Server.Models.Chat;
 
 namespace TravelGPT.Server.Observers.Chat;
 
-public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserver<IChatMessageContext>
+public class GeminiChatObserver(HttpClient httpClient, string apiKey, IChatParticipant author) : IObserver<IChatMessageContext>
 {
-    public required IChatParticipantContext Participant { get; init; }
-
     public void OnCompleted() { }
 
     public void OnError(Exception error) { }
 
     public async void OnNext(IChatMessageContext context)
     {
-        if (context.Participant.Id == Participant.Id)
+        if (context.Message.Author.Id == author.Id)
         {
             return;
         }
@@ -21,14 +19,10 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         var payload = new
         {
             contents = new[] {
-            new {
-                parts = new[] {
-                    new {
-                        context.Message.Text
-                    }
+                new {
+                    parts = (from message in context.Chat select new { message.Text }).ToArray()
                 }
             }
-        }
         };
 
         var response = await httpClient.PostAsJsonAsync(
@@ -42,6 +36,6 @@ public class GeminiChatObserver(HttpClient httpClient, string apiKey) : IObserve
         }
 
         var data = (await response.Content.ReadFromJsonAsync<dynamic>())!;
-        Participant.SendMessage((string)data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
+        context.Chat.Add(author, (string)data.GetProperty("candidates")[0].GetProperty("content").GetProperty("parts")[0].GetProperty("text").GetString());
     }
 }

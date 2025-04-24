@@ -1,17 +1,8 @@
+
 namespace TravelGPT.Server.Models.Chat.InMemory;
 
-public class InMemoryChatMessageContext(WeakReference<IDictionary<int, IChatMessageContext>> contexts) : IChatMessageContext
+public readonly record struct InMemoryChatMessageContext() : IChatMessageContext
 {
-    private IDictionary<int, IChatMessageContext>? Messages
-    {
-        get => contexts.TryGetTarget(out IDictionary<int, IChatMessageContext>? messages) ? messages : null;
-    }
-
-    public required int Id { get; init; }
-    public required DateTime Created { get; init; }
-    public required IChatParticipantContext Participant { get; init; }
-    public required ChatMessage Message { get; init; }
-
-    public void Dispose() => Messages?.Remove(Id);
+    public required IChat Chat { get; init; }
+    public required IChatMessage Message { get; init; }
 }
-
