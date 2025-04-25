@@ -1,46 +1,15 @@
-import { useMemo, useState } from "react";
-
-type SentChatMessageRequest = {
-  text: string;
-}
-
-type SentChatMessageResponse = SentChatMessageRequest
-
-type ChatCreationResponse = {
-  id: number
-};
+import { useState } from "react";
+import { useChat } from "./hooks/useChat";
 
 function App() {
-  const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
-  const [chatId, setChatId] = useState<number>();
-  useMemo(async () => {
-    const response = await fetch("http://localhost:5198/api/v1/chat", { method: "POST" });
-    setChatId(((await response.json()) as ChatCreationResponse).id);
-  }, [])
+  const chat = useChat();
 
-  console.log(chatId)
-  console.log(`Successfully retrieved chat id from the server: ${chatId}`)
-
-
-
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages([...messages, input]);
     setInput("");
-
-    const response = await fetch(`http://localhost:5198/api/v1/chat/${chatId}`, {
-      method: "POST",
-      body: JSON.stringify({
-        text: input
-      } as SentChatMessageRequest),
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-
-    setMessages([...messages, input, ((await response.json()) as SentChatMessageResponse).text]);
+    chat.sendMessage(input)
   };
 
   return (
@@ -52,7 +21,7 @@ function App() {
             <p className="m-1">Gemini LLM wrapper in React and ASP.NET!</p>
           </div>
           <div className="flex flex-col gap-4 overflow-auto p-8">
-            {messages.map((message, index) => (
+            {chat.messages.map((message, index) => (
               <div
                 key={index}
                 className={`w-full odd:text-right odd:[&>*]:bg-blue-500 even:[&>*]:bg-gray-700`}

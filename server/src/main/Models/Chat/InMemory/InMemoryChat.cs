@@ -4,7 +4,7 @@ namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChat(IDictionary<int, IChatMessage> messages, ICollection<IObserver<IChatMessageContext>> observers, Func<int, IChatMessageDetails, IChatMessage> messageFactory, Func<IChat, IChatMessage, IChatMessageContext> contextFactory) : IChat
 {
-    public required int Id { get; init; }
+    public required Guid Id { get; init; }
 
     private static int _counter;
 

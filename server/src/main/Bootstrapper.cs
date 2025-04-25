@@ -10,7 +10,7 @@ internal class Bootstrapper
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
             .AddSingleton<IChatRepository, InMemoryChatRepository>(provider =>
-                new InMemoryChatRepository(new Dictionary<int, IChat>(), id =>
+                new InMemoryChatRepository(new Dictionary<Guid, IChat>(), id =>
                     new InMemoryChat(
                             new Dictionary<int, IChatMessage>(),
                             [],
@@ -36,11 +36,10 @@ internal class Bootstrapper
             )
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
-            .AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-            })
+            .AddRouting(options => { options.LowercaseUrls = true; })
             .AddControllers();
+
+
 
         var app = builder.Build();
 

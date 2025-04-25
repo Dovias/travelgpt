@@ -21,12 +21,12 @@ public class ChatController(IChatRepository chats, IConfiguration config) : Cont
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetChat(int id) => chats.TryGet(id, out IChat? chat)
+    public IActionResult GetChat(Guid id) => chats.TryGet(id, out IChat? chat)
         ? Ok(new ChatResponse { Messages = (from message in chat select new ChatMessageResponse { Text = message.Text, Created = message.Created }) })
         : NotFound();
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteChat(int id)
+    public IActionResult DeleteChat(Guid id)
     {
         if (!chats.Contains(id))
         {
@@ -37,7 +37,7 @@ public class ChatController(IChatRepository chats, IConfiguration config) : Cont
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> SendChatMessage(int id, SentChatMessageRequest request)
+    public async Task<IActionResult> SendChatMessage(Guid id, SentChatMessageRequest request)
     {
         if (!chats.TryGet(id, out IChat? chat))
         {
@@ -46,9 +46,6 @@ public class ChatController(IChatRepository chats, IConfiguration config) : Cont
 
         chat!.Add(0, request.Text);
         IChatMessage message = (await chat!.FirstAsync()).Message;
-        return Ok(new SentChatMessageResponse
-        {
-            Text = message.Text
-        });
+        return Ok(new SentChatMessageResponse { Text = message.Text });
     }
 }

@@ -2,7 +2,7 @@ namespace TravelGPT.Server.Models.Chat;
 
 public interface IChat : IEnumerable<IChatMessage>, IObservable<IChatMessageContext>
 {
-    int Id { get; }
+    Guid Id { get; }
 
     IChatMessage Add(IChatMessageDetails details);
     bool Remove(int id);
