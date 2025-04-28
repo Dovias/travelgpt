@@ -6,9 +6,9 @@ import {
   SentChatMessageResponse,
 } from "./types/chatTypes";
 import fetchMessage from "./functions/fetchMessage";
-import DarkModeToggle from "./components/DarkModeToggle";
 import ExportChatButton from "./components/ExportChatButton";
 import NewChatButton from "./components/NewChatButton";
+import { promptInput } from "./resources/prompt";
 
 function App() {
   const [messages, setMessages] = useState<string[]>([]);
@@ -16,7 +16,7 @@ function App() {
 
   const handleSendMessage = async (input: string) => {
     setMessages([...messages, input]);
-    const response = await fetchMessage(input, chatId);
+    const response = await fetchMessage(promptInput + input, chatId);
     setMessages([
       ...messages,
       input,
@@ -39,43 +39,32 @@ function App() {
     const response = await fetchMessage(
       "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
         new Date().getHours() +
-        " hours.",
+        " hours. And then ask where I want to travel?",
       tempChatId
     );
     const data = await response.json();
     const newMessage = (data as SentChatMessageResponse).text;
-    setMessages(prev => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
   };
 
   useEffect(() => {
-    // const initChat = async () => {
-    //   const tempChatId = await createChat();
-    //   const response = await fetchMessage(
-    //     "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
-    //       new Date().getHours() +
-    //       " hours.",
-    //     tempChatId
-    //   );
-    //   setMessages([
-    //     ...messages,
-    //     ((await response.json()) as SentChatMessageResponse).text,
-    //   ]);
-    // };
-
     initChat();
   }, []);
 
   const createNewChat = () => {
     setMessages([]);
     setChatId(undefined);
-    initChat()
-  }
+    initChat();
+  };
 
   return (
     <div className="scheme-light dark:scheme-dark flex flex-col gap-4 w-screen h-screen overflow-auto bg-neutral-800 text-white relative">
       <div className="absolute top-4 right-4 flex flex-col gap-2">
         <NewChatButton onNewChat={createNewChat}></NewChatButton>
-        <ExportChatButton messages={messages} chatId={chatId}></ExportChatButton>
+        <ExportChatButton
+          messages={messages}
+          chatId={chatId}
+        ></ExportChatButton>
         {/* <DarkModeToggle></DarkModeToggle> */}
       </div>
       <div className="flex-1 overflow-auto">
@@ -90,7 +79,6 @@ function App() {
       </div>
     </div>
   );
-  
 }
 
 export default App;
