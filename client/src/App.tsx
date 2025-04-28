@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 type SentChatMessageRequest = {
   text: string;
@@ -22,24 +22,29 @@ function App() {
   console.log(chatId)
   console.log(`Successfully retrieved chat id from the server: ${chatId}`)
 
-
+  useEffect(() => {
+    if (!chatId) return;
+    setMessages(["Hello! 👋 Where would you like to travel today?"]);
+  }, [chatId]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
+  
     setMessages([...messages, input]);
     setInput("");
-
+  
+    const modifiedInput = input + "You are a travel guide, help me plan my trip based on my input. Respond in 3-5 points, in a short message. You will ask these things in order, one after another: Firstly i startconvesation by telling where (like country, city or route (like along seaside) i would like to visit), you will ask for how long, then based in my inputs provided give 3 reccomendations where to stay and ask if i want reccomendations on: some places to visit, after that - to eat. after that ask if i have any more questions, and help if i do ";
+  
     const response = await fetch(`http://localhost:5198/api/v1/chat/${chatId}`, {
       method: "POST",
       body: JSON.stringify({
-        text: input
+        text: modifiedInput
       } as SentChatMessageRequest),
       headers: {
         "Content-Type": "application/json",
       }
     });
-
+  
     setMessages([...messages, input, ((await response.json()) as SentChatMessageResponse).text]);
   };
 
@@ -48,14 +53,14 @@ function App() {
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col h-full overflow-auto max-w-5xl mx-auto">
           <div className="text-center m-16">
-            <h1 className="m-1 text-5xl font-bold">Gemini.NET 🗺️</h1>
-            <p className="m-1">Gemini LLM wrapper in React and ASP.NET!</p>
+            <h1 className="m-1 text-5xl font-bold">Travel GPT 🗺️</h1>
+            <p className="m-1">Your personal travel assistant</p>
           </div>
           <div className="flex flex-col gap-4 overflow-auto p-8">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`w-full odd:text-right odd:[&>*]:bg-blue-500 even:[&>*]:bg-gray-700`}
+                className={`w-full ${index % 2 === 0 ? "text-left [&>*]:bg-gray-700" : "text-right [&>*]:bg-blue-500"}`}
               >
                 <div
                   className={`inline-block max-w-lg p-3 rounded-xl text-white text-left`}
@@ -74,7 +79,7 @@ function App() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Type a message..."
+            placeholder="Type where you would like to go..."
             className="w-full p-3 rounded-lg bg-neutral-700 text-white border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
