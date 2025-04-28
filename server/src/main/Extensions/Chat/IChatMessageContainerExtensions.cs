@@ -18,7 +18,5 @@ public static class IChatMessageContainerExtensions
         );
     }
 
-    public static void Add(this IChat messages, int author, InMemoryMessageDetails message) => Add(messages, author, message.Text);
-
     public static void Add(this IChat messages, IChatParticipant author, string message) => Add(messages, author.Id, message);
 }
