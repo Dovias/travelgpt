@@ -1,88 +1,64 @@
-import { useMemo, useState } from "react";
-
-type SentChatMessageRequest = {
-  text: string;
-}
-
-type SentChatMessageResponse = SentChatMessageRequest
-
-type ChatCreationResponse = {
-  id: number
-};
+import { useEffect, useState } from "react";
+import Input from "./components/Input";
+import MessageList from "./components/MessageList";
+import {
+  ChatCreationResponse,
+  SentChatMessageResponse,
+} from "./types/chatTypes";
+import fetchMessage from "./functions/fetchMessage";
 
 function App() {
   const [messages, setMessages] = useState<string[]>([]);
-  const [input, setInput] = useState("");
   const [chatId, setChatId] = useState<number>();
-  useMemo(async () => {
-    const response = await fetch("http://localhost:5198/api/v1/chat", { method: "POST" });
-    setChatId(((await response.json()) as ChatCreationResponse).id);
-  }, [])
 
-  console.log(chatId)
-  console.log(`Successfully retrieved chat id from the server: ${chatId}`)
-
-
-
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-
+  const handleSendMessage = async (input: string) => {
     setMessages([...messages, input]);
-    setInput("");
-
-    const response = await fetch(`http://localhost:5198/api/v1/chat/${chatId}`, {
-      method: "POST",
-      body: JSON.stringify({
-        text: input
-      } as SentChatMessageRequest),
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-
-    setMessages([...messages, input, ((await response.json()) as SentChatMessageResponse).text]);
+    const response = await fetchMessage(input, chatId);
+    setMessages([
+      ...messages,
+      input,
+      ((await response.json()) as SentChatMessageResponse).text,
+    ]);
   };
+
+  const createChat = async () => {
+    const response = await fetch("http://localhost:5198/api/v1/chat", {
+      method: "POST",
+    });
+    const data = (await response.json()) as ChatCreationResponse;
+    setChatId(data.id);
+    console.log(`Successfully retrieved chat id from the server: ${data.id}`);
+    return data.id;
+  };
+
+  useEffect(() => {
+    const initChat = async () => {
+      const tempChatId = await createChat();
+      const response = await fetchMessage(
+        "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+          new Date().getHours() +
+          " hours.",
+        tempChatId
+      );
+      setMessages([
+        ...messages,
+        ((await response.json()) as SentChatMessageResponse).text,
+      ]);
+    };
+
+    initChat();
+  }, []);
 
   return (
     <div className="scheme-dark flex flex-col gap-4 w-screen h-screen overflow-auto bg-neutral-800 text-white">
       <div className="flex-1 overflow-auto">
-        <div className="flex flex-col h-full overflow-auto max-w-5xl mx-auto">
+        <div className="flex flex-col h-full overflow-auto max-w-5xl mx-auto relative">
           <div className="text-center m-16">
             <h1 className="m-1 text-5xl font-bold">Gemini.NET 🗺️</h1>
             <p className="m-1">Gemini LLM wrapper in React and ASP.NET!</p>
           </div>
-          <div className="flex flex-col gap-4 overflow-auto p-8">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`w-full odd:text-right odd:[&>*]:bg-blue-500 even:[&>*]:bg-gray-700`}
-              >
-                <div
-                  className={`inline-block max-w-lg p-3 rounded-xl text-white text-left`}
-                >
-                  <p className="whitespace-pre-wrap break-words">{message}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="w-full p-4 bg-neutral-900">
-        <div className="max-w-5xl m-auto flex gap-4">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Type a message..."
-            className="w-full p-3 rounded-lg bg-neutral-700 text-white border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={sendMessage}
-            className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[0.%]"
-          >
-            Send
-          </button>
+          <MessageList messages={messages}></MessageList>
+          <Input onSendMessage={handleSendMessage}></Input>
         </div>
       </div>
     </div>
