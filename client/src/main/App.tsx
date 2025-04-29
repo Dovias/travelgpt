@@ -37,23 +37,23 @@ function App() {
   };
 
   const initChat = async () => {
-    const tempChatId = await createChat();
-    const response = await fetchMessage(
-      "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
-      new Date().getHours() +
-      " hours. And then ask where I want to travel?",
-      tempChatId
-    );
-    const data = await response.json();
-    const newMessage = (data as SentChatMessageResponse).text;
-    setMessages((prev) => [...prev, newMessage]);
-    setDisconnected(false);
+    try {
+      const tempChatId = await createChat();
+      const response = await fetchMessage(
+        "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+        new Date().getHours() +
+        " hours. And then ask where I want to travel?",
+        tempChatId
+      );
+      const data = await response.json();
+      const newMessage = (data as SentChatMessageResponse).text;
+      setMessages((prev) => [...prev, newMessage]);
+      setDisconnected(false);
+    } catch { /* empty */ }
   };
 
   useEffect(() => {
-    try {
-      initChat();
-    } catch { /* empty */ }
+    initChat();
   }, []);
 
   const createNewChat = () => {
