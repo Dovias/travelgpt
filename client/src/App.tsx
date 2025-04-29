@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import Input from "./components/Input";
 import MessageList from "./components/MessageList";
@@ -70,8 +71,8 @@ function App() {
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col h-full overflow-auto max-w-5xl mx-auto relative">
           <div className="text-center m-16">
-            <h1 className="m-1 text-5xl font-bold">Gemini.NET 🗺️</h1>
-            <p className="m-1">Gemini LLM wrapper in React and ASP.NET!</p>
+            <h1 className="m-1 text-5xl font-bold">Travel GPT 🗺️</h1>
+            <p className="m-1">Your personal travel assistant</p>
           </div>
           <MessageList messages={messages} />
           <Input onSendMessage={handleSendMessage} />
