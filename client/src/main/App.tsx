@@ -12,6 +12,7 @@ import NewChatButton from "./components/NewChatButton";
 import { promptInput } from "./resources/prompt";
 
 function App() {
+  const [disconnected, setDisconnected] = useState<boolean>(true);
   const [messages, setMessages] = useState<string[]>([]);
   const [chatId, setChatId] = useState<number>();
 
@@ -36,16 +37,19 @@ function App() {
   };
 
   const initChat = async () => {
-    const tempChatId = await createChat();
-    const response = await fetchMessage(
-      "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+    try {
+      const tempChatId = await createChat();
+      const response = await fetchMessage(
+        "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
         new Date().getHours() +
         " hours. And then ask where I want to travel?",
-      tempChatId
-    );
-    const data = await response.json();
-    const newMessage = (data as SentChatMessageResponse).text;
-    setMessages((prev) => [...prev, newMessage]);
+        tempChatId
+      );
+      const data = await response.json();
+      const newMessage = (data as SentChatMessageResponse).text;
+      setMessages((prev) => [...prev, newMessage]);
+      setDisconnected(false);
+    } catch { /* empty */ }
   };
 
   useEffect(() => {
@@ -75,7 +79,7 @@ function App() {
             <p className="m-1">Your personal travel assistant</p>
           </div>
           <MessageList messages={messages} />
-          <Input onSendMessage={handleSendMessage} />
+          <Input onSendMessage={handleSendMessage} disconnected={disconnected} />
         </div>
       </div>
     </div>
