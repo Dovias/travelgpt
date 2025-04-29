@@ -12,7 +12,7 @@ import NewChatButton from "./components/NewChatButton";
 import { promptInput } from "./resources/prompt";
 
 function App() {
-  const [disconnected] = useState<boolean>(true);
+  const [disconnected, setDisconnected] = useState<boolean>(true);
   const [messages, setMessages] = useState<string[]>([]);
   const [chatId, setChatId] = useState<number>();
 
@@ -47,10 +47,13 @@ function App() {
     const data = await response.json();
     const newMessage = (data as SentChatMessageResponse).text;
     setMessages((prev) => [...prev, newMessage]);
+    setDisconnected(false);
   };
 
   useEffect(() => {
-    initChat();
+    try {
+      initChat();
+    } catch { /* empty */ }
   }, []);
 
   const createNewChat = () => {
