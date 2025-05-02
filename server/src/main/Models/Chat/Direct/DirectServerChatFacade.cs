@@ -52,7 +52,7 @@ public class DirectServerChatFacade(IChat chat, int authorId, ISubject<(IChat Ch
 
     public IDirectServerChatMessage this[int id] => ConstructMessage(chat[id]);
 
-    public IEnumerator<IChatMessage> GetEnumerator() => chat.GetEnumerator();
+    public IEnumerator<IDirectServerChatMessage> GetEnumerator() => (from message in chat select ConstructMessage(message)).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => chat.GetEnumerator();
 }

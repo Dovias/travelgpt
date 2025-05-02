@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace TravelGPT.Server.Models.Chat.Direct;
 
-public interface IDirectServerChat : IEnumerable<IChatMessage>
+public interface IDirectServerChat : IEnumerable<IDirectServerChatMessage>
 {
     int Id { get; }
 

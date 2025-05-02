@@ -1,4 +1,5 @@
 using TravelGPT.Server.Extensions;
+using TravelGPT.Server.Models.Chat.Llm;
 using TravelGPT.Server.Models.Chat.Response;
 
 namespace TravelGPT.Server;
@@ -10,11 +11,15 @@ internal class Bootstrapper
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
             .AddDirectServerChatRepository([
-                new GeminiChatResponseStep(
-                    new HttpClient(),
-                    builder.Configuration["GeminiApiKey"]
-                        ?? throw new KeyNotFoundException("Missing Gemini API key")
-                )
+                new LlmDirectServerChatResponseStep() {
+                    Client = new GeminiLlmClient() {
+                        HttpClient = new HttpClient(),
+                        ApiKey = builder.Configuration["GeminiApiKey"]
+                            ?? throw new KeyNotFoundException("Missing Gemini API key")
+                    },
+                    Instructions = []
+                }
+
             ])
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
