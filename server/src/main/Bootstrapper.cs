@@ -1,5 +1,5 @@
-using TravelGPT.Server.Models.Chat;
-using TravelGPT.Server.Models.Chat.InMemory;
+using TravelGPT.Server.Extensions;
+using TravelGPT.Server.Models.Chat.Response;
 
 namespace TravelGPT.Server;
 
@@ -9,31 +9,13 @@ internal class Bootstrapper
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddSingleton<IChatRepository, InMemoryChatRepository>(provider =>
-                new InMemoryChatRepository(new Dictionary<int, IChat>(), id =>
-                    new InMemoryChat(
-                            new Dictionary<int, IChatMessage>(),
-                            [],
-                            (id, details) => new InMemoryChatMessage
-                            {
-                                Id = id,
-                                Author = new InMemoryChatParticipant
-                                {
-                                    Id = details.Author.Id
-                                },
-
-                                Text = details.Text,
-                                Created = DateTime.Now
-                            },
-                            (messages, message) => new InMemoryChatMessageContext
-                            {
-                                Chat = messages,
-                                Message = message
-                            }
-                    )
-                    { Id = id }
+            .AddDirectServerChatRepository([
+                new GeminiChatResponseStep(
+                    new HttpClient(),
+                    builder.Configuration["GeminiApiKey"]
+                        ?? throw new KeyNotFoundException("Missing Gemini API key")
                 )
-            )
+            ])
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddRouting(options =>

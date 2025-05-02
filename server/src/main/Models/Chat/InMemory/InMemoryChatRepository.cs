@@ -1,15 +1,16 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TravelGPT.Server.Models.Chat.InMemory;
 
-public class InMemoryChatRepository(IDictionary<int, IChat> chats, Func<int, IChat> factory) : IChatRepository
+public class InMemoryChatRepository(IDictionary<int, IChat> chats, IDictionary<int, IChatMessage> messages) : IChatRepository
 {
-    private static int _counter;
+    private int _counter;
 
     public IChat Create()
     {
         int id = _counter++;
-        IChat chat = factory.Invoke(id);
+        IChat chat = new InMemoryChat(messages) { Id = id };
 
         chats.Add(id, chat);
         return chat;
@@ -17,7 +18,7 @@ public class InMemoryChatRepository(IDictionary<int, IChat> chats, Func<int, ICh
 
     public bool Delete(int id) => chats.Remove(id);
 
-    public bool TryGet(int id, out IChat? chat) => chats.TryGetValue(id, out chat);
+    public bool TryGet(int id, [NotNullWhen(true)] out IChat? chat) => chats.TryGetValue(id, out chat);
 
     public bool Contains(int id) => chats.ContainsKey(id);
 

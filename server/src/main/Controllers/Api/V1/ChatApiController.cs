@@ -1,54 +1,36 @@
 using System.Reactive.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TravelGPT.Server.Dtos.Api.V1;
-using TravelGPT.Server.Extensions.Chat;
-using TravelGPT.Server.Models.Chat;
-using TravelGPT.Server.Models.Chat.InMemory;
-using TravelGPT.Server.Observers.Chat;
+using TravelGPT.Server.Models.Chat.Direct;
 
 namespace TravelGPT.Server.Controllers.Api.V1;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class ChatController(IChatRepository chats, IConfiguration config) : ControllerBase
+public class ChatController(IDirectServerChatRepository repository) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat()
     {
-        IChat chat = chats.Create();
-        chat.Subscribe(new GeminiChatObserver(new HttpClient(), config["GeminiApiKey"]!, new InMemoryChatParticipant { Id = 1 }));
+        IDirectServerChat chat = repository.Create();
         return Ok(new ChatCreationResponse { Id = chat.Id });
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetChat(int id) => chats.TryGet(id, out IChat? chat)
+    public IActionResult GetChat(int id) => repository.TryGet(id, out IDirectServerChat? chat)
         ? Ok(new ChatResponse { Messages = (from message in chat select new ChatMessageResponse { Text = message.Text, Created = message.Created }) })
         : NotFound();
 
     [HttpDelete("{id}")]
     public IActionResult DeleteChat(int id)
     {
-        if (!chats.Contains(id))
-        {
-            return NotFound();
-        }
-        chats.Delete(id);
+        if (!repository.Contains(id)) return NotFound();
+
+        repository.Delete(id);
         return Ok();
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> SendChatMessage(int id, SentChatMessageRequest request)
-    {
-        if (!chats.TryGet(id, out IChat? chat))
-        {
-            return NotFound();
-        }
-
-        chat!.Add(0, request.Text);
-        IChatMessage message = (await chat!.FirstAsync()).Message;
-        return Ok(new SentChatMessageResponse
-        {
-            Text = message.Text
-        });
-    }
+    public IActionResult SendChatMessage(int id, SentChatMessageRequest request) =>
+        repository.TryGet(id, out IDirectServerChat? chat) ? Ok(new SentChatMessageResponse { Text = chat.Add(request.Text).Received.Text }) : NotFound();
 }
