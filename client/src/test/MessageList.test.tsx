@@ -15,5 +15,5 @@ describe("MessageList", () => {
         const { getByText } = render(<MessageList messages={["Hello, where you would like to travel?", "I would like to travel top vilnius"]} />);
         expect((getByText("Hello, where you would like to travel?"), "I would like to travel top vilnius")).toBeTruthy();
     });
-      
+
 });

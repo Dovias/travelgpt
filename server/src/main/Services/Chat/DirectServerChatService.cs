@@ -19,7 +19,7 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
         };
     }
 
-    public bool TryGetChatResponse(int id, out ChatRetrievalResponse response)
+    public bool TryGetChatResponse(Guid id, out ChatRetrievalResponse response)
     {
         if (!repository.TryGet(id, out ChatContext chat))
         {
@@ -36,9 +36,9 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
         return true;
     }
 
-    public bool DeleteChat(int id) => repository.Delete(id);
+    public bool DeleteChat(Guid id) => repository.Delete(id);
 
-    public bool TryGetChatMessageResponse(int id, ChatMessageResponseRetrievalRequest request, out ChatMessageResponseRetrievalResponse response)
+    public bool TryGetChatMessageResponse(Guid id, ChatMessageResponseRetrievalRequest request, out ChatMessageResponseRetrievalResponse response)
     {
         if (!repository.TryGet(id, out ChatContext chat))
         {

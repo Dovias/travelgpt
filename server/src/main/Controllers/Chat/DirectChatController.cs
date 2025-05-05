@@ -10,16 +10,16 @@ public class DirectChatController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat()
-    => Ok(service.CreateChat());
+        => Ok(service.CreateChat());
 
     [HttpGet("{id}")]
-    public IActionResult GetChat(int id)
-    => service.TryGetChatResponse(id, out ChatRetrievalResponse response) ? Ok(response) : NotFound();
+    public IActionResult GetChat(Guid id)
+        => service.TryGetChatResponse(id, out ChatRetrievalResponse response) ? Ok(response) : NotFound();
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteChat(int id) => service.DeleteChat(id) ? Ok() : NotFound();
+    public IActionResult DeleteChat(Guid id) => service.DeleteChat(id) ? Ok() : NotFound();
 
     [HttpPost("{id}")]
-    public IActionResult SendChatMessage(int id, ChatMessageResponseRetrievalRequest request)
-    => service.TryGetChatMessageResponse(id, request, out ChatMessageResponseRetrievalResponse response) ? Ok(response) : NotFound();
+    public IActionResult SendChatMessage(Guid id, ChatMessageResponseRetrievalRequest request)
+        => service.TryGetChatMessageResponse(id, request, out ChatMessageResponseRetrievalResponse response) ? Ok(response) : NotFound();
 }

@@ -52,7 +52,7 @@ public static class IServiceCollectionExtensions
 
         return new DirectServerChatService(
             new InMemoryChatRepository(
-                new Dictionary<int, ChatContext>(),
+                new Dictionary<Guid, ChatContext>(),
                 new Dictionary<int, ChatMessageContext>()
             ),
             client, server, subject

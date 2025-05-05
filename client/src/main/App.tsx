@@ -14,7 +14,7 @@ import { promptInput } from "./resources/prompt";
 function App() {
   const [disconnected, setDisconnected] = useState<boolean>(true);
   const [messages, setMessages] = useState<string[]>([]);
-  const [chatId, setChatId] = useState<number>();
+  const [chatId, setChatId] = useState<string>();
 
   const handleSendMessage = async (input: string) => {
     setMessages([...messages, input]);
