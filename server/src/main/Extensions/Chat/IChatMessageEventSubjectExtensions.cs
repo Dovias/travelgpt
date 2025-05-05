@@ -1,7 +1,7 @@
 using System.Reactive.Subjects;
 using TravelGPT.Server.Models.Chat;
 
-namespace TravelGPT.Server.Extensions;
+namespace TravelGPT.Server.Extensions.Chat;
 
 public static class IChatMessageEventSubjectExtensions
 {

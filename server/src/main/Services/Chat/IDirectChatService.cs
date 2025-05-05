@@ -1,4 +1,4 @@
-using TravelGPT.Server.Dtos.Api.V1.Chat;
+using TravelGPT.Server.Dtos.Chat;
 
 namespace TravelGPT.Server.Services.Chat;
 

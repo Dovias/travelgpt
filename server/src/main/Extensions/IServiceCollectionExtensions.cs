@@ -1,8 +1,11 @@
 using System.Reactive.Subjects;
 using System.Text.Json;
+using TravelGPT.Server.Extensions.Chat;
 using TravelGPT.Server.Models.Chat;
+using TravelGPT.Server.Models.Chat.InMemory;
 using TravelGPT.Server.Models.Chat.Response;
-using TravelGPT.Server.Models.Llm;
+using TravelGPT.Server.Models.Llm.Gemini;
+using TravelGPT.Server.Models.Llm.Gemini.Json;
 using TravelGPT.Server.Models.User;
 using TravelGPT.Server.Services.Chat;
 
@@ -30,6 +33,7 @@ public static class IServiceCollectionExtensions
                     ?? throw new KeyNotFoundException("Missing Gemini API key")
             ), server, [])
         ];
+
         subject.Subscribe(@event =>
         {
             ChatContext chat = @event.Chat;
@@ -42,8 +46,8 @@ public static class IServiceCollectionExtensions
             {
                 if (!step.Step(chat, message, ref response)) break;
             }
-            subject.OnNext(chat, chat.Messages.Add(server, response));
 
+            subject.OnNext(chat, chat.Messages.Add(server, response));
         });
 
         return new DirectServerChatService(

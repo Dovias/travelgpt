@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using TravelGPT.Server.Dtos.Api.V1.Chat;
+using TravelGPT.Server.Dtos.Chat;
 using TravelGPT.Server.Services.Chat;
 
-namespace TravelGPT.Server.Controllers.Api.V1;
+namespace TravelGPT.Server.Controllers.Chat;
 
 [ApiController]
-[Route("/api/v1/[controller]")]
-public class ChatController(IDirectChatService service) : ControllerBase
+[Route("/api/v1/chat")]
+public class DirectChatApiController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat()
@@ -22,5 +22,4 @@ public class ChatController(IDirectChatService service) : ControllerBase
     [HttpPost("{id}")]
     public IActionResult SendChatMessage(int id, ChatMessageResponseRetrievalRequest request)
     => service.TryGetChatMessageResponse(id, request, out ChatMessageResponseRetrievalResponse response) ? Ok(response) : NotFound();
-
 }

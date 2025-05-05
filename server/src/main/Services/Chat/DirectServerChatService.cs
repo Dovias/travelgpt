@@ -1,8 +1,8 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
-using TravelGPT.Server.Dtos.Api.V1.Chat;
-using TravelGPT.Server.Extensions;
+using TravelGPT.Server.Dtos.Chat;
+using TravelGPT.Server.Extensions.Chat;
 using TravelGPT.Server.Models.Chat;
 using TravelGPT.Server.Models.User;
 

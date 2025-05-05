@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace TravelGPT.Server.Models.Llm;
+namespace TravelGPT.Server.Models.Llm.Gemini.Json;
 
 public class GeminiLlmRequestJsonConverter : JsonConverter<LlmRequest>
 {

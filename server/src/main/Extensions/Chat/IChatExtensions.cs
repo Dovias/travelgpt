@@ -1,7 +1,7 @@
 using TravelGPT.Server.Models.Chat;
 using TravelGPT.Server.Models.User;
 
-namespace TravelGPT.Server.Extensions;
+namespace TravelGPT.Server.Extensions.Chat;
 
 public static class IChatExtensions
 {

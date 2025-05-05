@@ -1,8 +1,8 @@
 using System.Text.Json;
 
-namespace TravelGPT.Server.Models.Llm;
+namespace TravelGPT.Server.Models.Llm.Gemini;
 
-public readonly struct GeminiLlmClient(HttpClient client, JsonSerializerOptions options, string apiKey) : ILlmClient
+public class GeminiLlmClient(HttpClient client, JsonSerializerOptions options, string apiKey) : ILlmClient
 {
     public LlmResponse Fetch(LlmRequest request)
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using TravelGPT.Server.Models.User;
 
-namespace TravelGPT.Server.Models.Chat;
+namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChat(IDictionary<int, ChatMessageContext> contexts) : IChat
 {

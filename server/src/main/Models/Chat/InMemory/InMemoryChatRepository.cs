@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace TravelGPT.Server.Models.Chat;
+namespace TravelGPT.Server.Models.Chat.InMemory;
 
 public class InMemoryChatRepository(IDictionary<int, ChatContext> chats, IDictionary<int, ChatMessageContext> messages) : IChatRepository
 {
