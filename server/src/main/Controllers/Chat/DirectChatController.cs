@@ -20,6 +20,6 @@ public class DirectChatController(IDirectChatService service) : ControllerBase
     public IActionResult DeleteChat(Guid id) => service.DeleteChat(id) ? Ok() : NotFound();
 
     [HttpPost("{id}")]
-    public IActionResult SendChatMessage(Guid id, ChatMessageResponseRetrievalRequest request)
-        => service.TryGetChatMessageResponse(id, request, out ChatMessageResponseRetrievalResponse response) ? Ok(response) : NotFound();
+    public IActionResult SendChatMessage(Guid id, ChatMessageRetrievalRequest request)
+        => service.TryGetChatMessageResponse(id, request, out ChatMessageRetrievalResponse response) ? Ok(response) : NotFound();
 }

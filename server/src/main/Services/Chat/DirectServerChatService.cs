@@ -29,16 +29,14 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
 
         response = new()
         {
-            Messages = chat.Messages.Select(context =>
-                new ChatMessageResponseRetrievalResponse { Text = context.Message.Text }
-            )
+            Messages = chat.Messages.Select(context => context.Message.Text)
         };
         return true;
     }
 
     public bool DeleteChat(Guid id) => repository.Delete(id);
 
-    public bool TryGetChatMessageResponse(Guid id, ChatMessageResponseRetrievalRequest request, out ChatMessageResponseRetrievalResponse response)
+    public bool TryGetChatMessageResponse(Guid id, ChatMessageRetrievalRequest request, out ChatMessageRetrievalResponse response)
     {
         if (!repository.TryGet(id, out ChatContext chat))
         {

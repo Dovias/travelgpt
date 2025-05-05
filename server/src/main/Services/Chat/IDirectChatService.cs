@@ -7,5 +7,5 @@ public interface IDirectChatService
     ChatCreationResponse CreateChat();
     bool TryGetChatResponse(Guid id, out ChatRetrievalResponse response);
     bool DeleteChat(Guid id);
-    bool TryGetChatMessageResponse(Guid chatId, ChatMessageResponseRetrievalRequest request, out ChatMessageResponseRetrievalResponse response);
+    bool TryGetChatMessageResponse(Guid chatId, ChatMessageRetrievalRequest request, out ChatMessageRetrievalResponse response);
 }
