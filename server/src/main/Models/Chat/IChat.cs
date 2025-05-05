@@ -1,16 +1,14 @@
-using System.Diagnostics.CodeAnalysis;
+using TravelGPT.Server.Models.User;
 
 namespace TravelGPT.Server.Models.Chat;
 
-public interface IChat : IEnumerable<IChatMessage>
+public interface IChat : IEnumerable<ChatMessageContext>
 {
-    int Id { get; }
-
-    IChatMessage Add(int authorId, string text);
+    ChatMessageContext Add(UserContext author, ChatMessage message);
     bool Remove(int id);
 
-    bool TryGet(int id, [NotNullWhen(true)] out IChatMessage? message);
+    bool TryGet(int id, out ChatMessageContext message);
     bool Contains(int id);
 
-    public IChatMessage this[int id] { get; }
+    public ChatMessageContext this[int id] { get; }
 }

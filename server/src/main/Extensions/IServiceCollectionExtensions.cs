@@ -1,47 +1,51 @@
 using System.Reactive.Subjects;
 using TravelGPT.Server.Models.Chat;
-using TravelGPT.Server.Models.Chat.Direct;
-using TravelGPT.Server.Models.Chat.InMemory;
+using TravelGPT.Server.Models.Chat.Response;
+using TravelGPT.Server.Models.Llm;
+using TravelGPT.Server.Models.User;
+using TravelGPT.Server.Services.Chat;
 
 namespace TravelGPT.Server.Extensions;
 
 public static class IServiceCollectionExtensions
 {
-    private static readonly int clientId = 0;
-    private static readonly int serverId = 1;
-
-    private static ISubject<(IChat, IChatMessage)> ConstructSubject(IEnumerable<IDirectServerChatResponseStep> steps, string defaultResponse)
+    public static IServiceCollection AddDirectChat(this IServiceCollection collection)
+    => collection.AddSingleton<IDirectChatService>(provider =>
     {
-        Subject<(IChat, IChatMessage)> subject = new();
-        subject.Subscribe(context =>
-        {
-            var (chat, message) = context;
-            if (message.AuthorId == serverId) return;
+        UserContext client = new() { Id = 0 };
+        UserContext server = new() { Id = 1 };
 
-            string response = defaultResponse;
-            foreach (IDirectServerChatResponseStep step in steps)
+        Subject<ChatMessageEvent> subject = new();
+
+        IEnumerable<IChatResponseStep> steps = [
+            new LlmChatResponseStep(new GeminiLlmClient(
+                new HttpClient(),
+                provider.GetRequiredService<IConfiguration>()["GeminiApiKey"]
+                    ?? throw new KeyNotFoundException("Missing Gemini API key")
+            ), server, [])
+        ];
+        subject.Subscribe(@event =>
+        {
+            ChatContext chat = @event.Chat;
+            ChatMessageContext message = @event.Message;
+
+            if (message.Author.Id == server.Id) return;
+
+            string response = "";
+            foreach (IChatResponseStep step in steps)
             {
-                if (!step.Step(new DirectServerChatFacade(chat, clientId, subject), new InMemoryDirectServerChatMessage
-                {
-                    Id = message.Id,
-                    Text = message.Text,
-                    Author = message.AuthorId == clientId ? DirectServerChatMessageAuthor.Client : DirectServerChatMessageAuthor.Server,
-                    Created = DateTime.Now
-                }, ref response)) break;
+                if (!step.Step(chat, message, ref response)) break;
             }
-            subject.OnNext((chat, chat.Add(serverId, response)));
+            subject.OnNext(chat, chat.Messages.Add(server, response));
+
         });
 
-        return subject;
-    }
-
-    private static IDirectServerChatRepository ConstructRepository(IServiceProvider provider, IEnumerable<IDirectServerChatResponseStep> steps, string defaultResponse)
-        => new DirectServerChatRepositoryFacade(
-            new InMemoryChatRepository(new Dictionary<int, IChat>(), new Dictionary<int, IChatMessage>()),
-            clientId,
-            ConstructSubject(steps, defaultResponse)
+        return new DirectServerChatService(
+            new InMemoryChatRepository(
+                new Dictionary<int, ChatContext>(),
+                new Dictionary<int, ChatMessageContext>()
+            ),
+            client, server, subject
         );
-
-    public static IServiceCollection AddDirectServerChatRepository(this IServiceCollection collection, ICollection<IDirectServerChatResponseStep> steps, string defaultResponse = "")
-        => collection.AddSingleton(provider => ConstructRepository(provider, steps, defaultResponse));
+    });
 }

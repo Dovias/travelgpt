@@ -1,0 +1,6 @@
+namespace TravelGPT.Server.Dtos.Api.V1.Chat;
+
+public readonly record struct ChatMessageResponseRetrievalResponse
+{
+    public required string Text { get; init; }
+}

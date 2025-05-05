@@ -1,4 +1,4 @@
-namespace TravelGPT.Server.Dtos.Api.V1;
+namespace TravelGPT.Server.Dtos.Api.V1.Chat;
 
 public readonly record struct ChatCreationResponse
 {

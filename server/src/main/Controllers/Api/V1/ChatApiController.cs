@@ -1,36 +1,26 @@
-using System.Reactive.Linq;
 using Microsoft.AspNetCore.Mvc;
-using TravelGPT.Server.Dtos.Api.V1;
-using TravelGPT.Server.Models.Chat.Direct;
+using TravelGPT.Server.Dtos.Api.V1.Chat;
+using TravelGPT.Server.Services.Chat;
 
 namespace TravelGPT.Server.Controllers.Api.V1;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class ChatController(IDirectServerChatRepository repository) : ControllerBase
+public class ChatController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat()
-    {
-        IDirectServerChat chat = repository.Create();
-        return Ok(new ChatCreationResponse { Id = chat.Id });
-    }
+    => Ok(service.CreateChat());
 
     [HttpGet("{id}")]
-    public IActionResult GetChat(int id) => repository.TryGet(id, out IDirectServerChat? chat)
-        ? Ok(new ChatResponse { Messages = (from message in chat select new ChatMessageResponse { Text = message.Text, Created = message.Created }) })
-        : NotFound();
+    public IActionResult GetChat(int id)
+    => service.TryGetChatResponse(id, out ChatRetrievalResponse response) ? Ok(response) : NotFound();
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteChat(int id)
-    {
-        if (!repository.Contains(id)) return NotFound();
-
-        repository.Delete(id);
-        return Ok();
-    }
+    public IActionResult DeleteChat(int id) => service.DeleteChat(id) ? Ok() : NotFound();
 
     [HttpPost("{id}")]
-    public IActionResult SendChatMessage(int id, SentChatMessageRequest request) =>
-        repository.TryGet(id, out IDirectServerChat? chat) ? Ok(new SentChatMessageResponse { Text = chat.Add(request.Text).Received.Text }) : NotFound();
+    public IActionResult SendChatMessage(int id, ChatMessageResponseRetrievalRequest request)
+    => service.TryGetChatMessageResponse(id, request, out ChatMessageResponseRetrievalResponse response) ? Ok(response) : NotFound();
+
 }

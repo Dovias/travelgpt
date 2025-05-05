@@ -1,0 +1,23 @@
+using TravelGPT.Server.Models.Llm;
+using TravelGPT.Server.Models.User;
+
+namespace TravelGPT.Server.Models.Chat.Response;
+
+public class LlmChatResponseStep(ILlmClient client, UserContext server, IEnumerable<string> instructions) : IChatResponseStep
+{
+    public bool Step(ChatContext chat, ChatMessageContext sent, ref string response)
+    {
+        response = client.Fetch(new LlmRequest()
+        {
+            Messages =
+                from context in chat.Messages
+                select new LlmMessage()
+                {
+                    Text = context.Message.Text,
+                    Role = context.Id == server.Id ? LlmMessageRole.Model : LlmMessageRole.User
+                },
+            Instructions = instructions,
+        }).Text;
+        return true;
+    }
+}
