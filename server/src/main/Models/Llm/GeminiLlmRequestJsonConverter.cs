@@ -11,20 +11,18 @@ public class GeminiLlmRequestJsonConverter : JsonConverter<LlmRequest>
         using JsonDocument document = JsonDocument.ParseValue(ref reader);
         return new()
         {
-            Messages =
-                from content in document.RootElement.GetProperty("contents").EnumerateArray()
-                from part in content.GetProperty("parts").EnumerateArray()
-                select new LlmMessage()
+            Messages = document.RootElement.GetProperty("contents").EnumerateArray()
+                .SelectMany(content => content.GetProperty("parts").EnumerateArray())
+                .Select(part => new LlmMessage()
                 {
                     Text = part.GetProperty("text").GetString()!,
                     Role = part.GetProperty("role").GetString() == "model" ? LlmMessageRole.Model : LlmMessageRole.User
-                },
-
+                }),
             Instructions =
-                from part in document.RootElement.TryGetProperty("system_instruction", out JsonElement element)
+                (document.RootElement.TryGetProperty("system_instruction", out JsonElement element)
                     ? element.GetProperty("parts").EnumerateArray()
                     : []
-                select part.GetProperty("text").GetString()
+                ).Select(part => part.GetProperty("text").GetString()!)
         };
     }
 

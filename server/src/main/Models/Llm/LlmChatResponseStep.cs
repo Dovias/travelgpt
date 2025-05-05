@@ -9,15 +9,13 @@ public class LlmChatResponseStep(ILlmClient client, UserContext server, IEnumera
     {
         response = client.Fetch(new LlmRequest()
         {
-            Messages =
-                from context in chat.Messages
-                select new LlmMessage()
-                {
-                    Text = context.Message.Text,
-                    Role = context.Id == server.Id ? LlmMessageRole.Model : LlmMessageRole.User
-                },
-            Instructions = instructions,
-        }).Text;
+            Messages = chat.Messages.Select(context => new LlmMessage()
+            {
+                Text = context.Message.Text,
+                Role = context.Id == server.Id ? LlmMessageRole.Model : LlmMessageRole.User
+            }),
+            Instructions = instructions
+        }).Text.Aggregate((accumulator, value) => $"{accumulator}\n{value}").ToString();
         return true;
     }
 }

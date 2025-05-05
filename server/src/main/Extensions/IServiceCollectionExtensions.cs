@@ -1,4 +1,5 @@
 using System.Reactive.Subjects;
+using System.Text.Json;
 using TravelGPT.Server.Models.Chat;
 using TravelGPT.Server.Models.Chat.Response;
 using TravelGPT.Server.Models.Llm;
@@ -17,9 +18,14 @@ public static class IServiceCollectionExtensions
 
         Subject<ChatMessageEvent> subject = new();
 
+        JsonSerializerOptions options = new();
+        options.Converters.Add(new GeminiLlmRequestJsonConverter());
+        options.Converters.Add(new GeminiLlmResponseEnumerableJsonConverter());
+
         IEnumerable<IChatResponseStep> steps = [
             new LlmChatResponseStep(new GeminiLlmClient(
                 new HttpClient(),
+                options,
                 provider.GetRequiredService<IConfiguration>()["GeminiApiKey"]
                     ?? throw new KeyNotFoundException("Missing Gemini API key")
             ), server, [])
