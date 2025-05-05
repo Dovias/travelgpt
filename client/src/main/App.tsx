@@ -27,7 +27,7 @@ function App() {
   };
 
   const createChat = async () => {
-    const response = await fetch("http://localhost:5198/api/v1/chat", {
+    const response = await fetch("http://localhost:5198/chat", {
       method: "POST",
     });
     const data = (await response.json()) as ChatCreationResponse;

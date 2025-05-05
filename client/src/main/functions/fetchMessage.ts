@@ -1,7 +1,7 @@
 import { SentChatMessageRequest } from "../types/chatTypes";
 
 const fetchMessage = async (input: string, chatId: number | undefined) => {
-  const response = await fetch(`http://localhost:5198/api/v1/chat/${chatId}`, {
+  const response = await fetch(`http://localhost:5198/chat/${chatId}`, {
     method: "POST",
     body: JSON.stringify({
       text: input,

@@ -5,8 +5,8 @@ using TravelGPT.Server.Services.Chat;
 namespace TravelGPT.Server.Controllers.Chat;
 
 [ApiController]
-[Route("/api/v1/chat")]
-public class DirectChatApiController(IDirectChatService service) : ControllerBase
+[Route("/chat")]
+public class DirectChatController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat()
