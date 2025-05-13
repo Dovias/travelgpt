@@ -2,8 +2,8 @@ using System.Reactive.Subjects;
 using System.Text.Json;
 using TravelGPT.Server.Extensions.Chat;
 using TravelGPT.Server.Models.Chat;
-using TravelGPT.Server.Models.Chat.InMemory;
 using TravelGPT.Server.Models.Chat.Response;
+using TravelGPT.Server.Models.Chat.Dictionary;
 using TravelGPT.Server.Models.Llm.Gemini;
 using TravelGPT.Server.Models.Llm.Gemini.Json;
 using TravelGPT.Server.Models.User;
@@ -51,10 +51,7 @@ public static class IServiceCollectionExtensions
         });
 
         return new DirectServerChatService(
-            new InMemoryChatRepository(
-                new Dictionary<Guid, ChatContext>(),
-                new Dictionary<int, ChatMessageContext>()
-            ),
+            new DictionaryChatRepository(new Dictionary<Guid, ChatContext>()),
             client, server, subject
         );
     });

@@ -1,9 +1,9 @@
 using System.Collections;
 using TravelGPT.Server.Models.User;
 
-namespace TravelGPT.Server.Models.Chat.InMemory;
+namespace TravelGPT.Server.Models.Chat.Dictionary;
 
-public class InMemoryChat(IDictionary<int, ChatMessageContext> contexts) : IChat
+public class DictionaryChat(IDictionary<int, ChatMessageContext> contexts) : IChat
 {
     private static int _counter;
 

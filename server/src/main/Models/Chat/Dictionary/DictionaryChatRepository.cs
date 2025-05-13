@@ -1,8 +1,8 @@
 using System.Collections;
 
-namespace TravelGPT.Server.Models.Chat.InMemory;
+namespace TravelGPT.Server.Models.Chat.Dictionary;
 
-public class InMemoryChatRepository(IDictionary<Guid, ChatContext> chats, IDictionary<int, ChatMessageContext> messages) : IChatRepository
+public class DictionaryChatRepository(IDictionary<Guid, ChatContext> chats) : IChatRepository
 {
     public ChatContext Create()
     {
@@ -10,7 +10,7 @@ public class InMemoryChatRepository(IDictionary<Guid, ChatContext> chats, IDicti
         ChatContext context = new()
         {
             Id = id,
-            Messages = new InMemoryChat(messages)
+            Messages = new DictionaryChat(new Dictionary<int, ChatMessageContext>())
         };
 
         chats.Add(id, context);
@@ -24,6 +24,6 @@ public class InMemoryChatRepository(IDictionary<Guid, ChatContext> chats, IDicti
     public bool Contains(Guid id) => chats.ContainsKey(id);
 
     public IEnumerator<ChatContext> GetEnumerator() => chats.Values.GetEnumerator();
-
+ 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

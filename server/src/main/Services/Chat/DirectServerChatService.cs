@@ -26,12 +26,12 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
             response = default;
             return false;
         }
-
+        
         response = new()
         {
             Messages = chat.Messages.Select(context => context.Message.Text)
         };
-        return true;
+        return true; 
     }
 
     public bool DeleteChat(Guid id) => repository.Delete(id);
