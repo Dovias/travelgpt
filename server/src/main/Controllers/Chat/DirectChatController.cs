@@ -9,8 +9,8 @@ namespace TravelGPT.Server.Controllers.Chat;
 public class DirectChatController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
-    public IActionResult CreateChat()
-        => Ok(service.CreateChat());
+    public IActionResult CreateChat(ChatCreationRequest request)
+        => Ok(service.CreateChat(request));
 
     [HttpGet("{id}")]
     public IActionResult GetChat(Guid id)

@@ -11,7 +11,7 @@ public class LlmChatResponseStep(ILlmClient client, UserContext server, IEnumera
         {
             Messages = chat.Messages.Select(context => new LlmMessage()
             {
-                Text = context.Message.Text,
+                Text = context.Details.Text,
                 Role = context.Id == server.Id ? LlmMessageRole.Model : LlmMessageRole.User
             }),
             Instructions = instructions

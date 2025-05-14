@@ -6,4 +6,5 @@ export type SentChatMessageResponse = SentChatMessageRequest;
 
 export type ChatCreationResponse = {
   id: string;
+  text: string;
 };

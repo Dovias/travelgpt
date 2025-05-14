@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import Input from "./components/Input";
 import MessageList from "./components/MessageList";
@@ -26,30 +25,27 @@ function App() {
     ]);
   };
 
-  const createChat = async () => {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-    });
-    const data = (await response.json()) as ChatCreationResponse;
-    setChatId(data.id);
-    console.log(`Successfully retrieved chat id from the server: ${data.id}`);
-    return data.id;
-  };
-
   const initChat = async () => {
     try {
-      const tempChatId = await createChat();
-      const response = await fetchMessage(
-        "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
-        new Date().getHours() +
-        " hours. And then ask where I want to travel?",
-        tempChatId
-      );
-      const data = await response.json();
-      const newMessage = (data as SentChatMessageResponse).text;
-      setMessages((prev) => [...prev, newMessage]);
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        body: JSON.stringify({
+          text:
+            "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+            new Date().getHours() +
+            " hours. And then ask where I want to travel?",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const { id, text } = (await response.json()) as ChatCreationResponse;
+      setChatId(id);
+      setMessages((prev) => [...prev, text]);
       setDisconnected(false);
-    } catch { /* empty */ }
+    } catch {
+      /* empty */
+    }
   };
 
   useEffect(() => {
@@ -79,7 +75,10 @@ function App() {
             <p className="m-1">Your personal travel assistant</p>
           </div>
           <MessageList messages={messages} />
-          <Input onSendMessage={handleSendMessage} disconnected={disconnected} />
+          <Input
+            onSendMessage={handleSendMessage}
+            disconnected={disconnected}
+          />
         </div>
       </div>
     </div>

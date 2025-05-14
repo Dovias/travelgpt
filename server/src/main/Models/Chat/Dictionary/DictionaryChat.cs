@@ -14,7 +14,7 @@ public class DictionaryChat(IDictionary<int, ChatMessageContext> contexts) : ICh
         ChatMessageContext context = new()
         {
             Id = id,
-            Message = message,
+            Details = message,
             Author = author,
             Created = DateTime.Now
         };

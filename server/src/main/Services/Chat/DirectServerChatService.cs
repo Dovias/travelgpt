@@ -10,12 +10,25 @@ namespace TravelGPT.Server.Services.Chat;
 
 public class DirectServerChatService(IChatRepository repository, UserContext client, UserContext server, ISubject<ChatMessageEvent> subject) : IDirectChatService
 {
-    public ChatCreationResponse CreateChat()
+    private ChatMessageEvent SendChatMessage(ChatContext chat, string text) {
+        ChatMessageContext message = chat.Messages.Add(client, text);
+
+        Task<ChatMessageEvent> task = subject
+            .FirstAsync(@event => @event.Chat.Id == chat.Id && @event.Message.Author.Id == server.Id)
+            .ToTask();
+
+        subject.OnNext(chat, message);
+
+        return task.Result;
+    }
+
+    public ChatCreationResponse CreateChat(ChatCreationRequest request)
     {
         ChatContext chat = repository.Create();
         return new()
         {
-            Id = chat.Id
+            Id = chat.Id,
+            Text = SendChatMessage(chat, request.Text).Message.Details.Text
         };
     }
 
@@ -29,7 +42,7 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
         
         response = new()
         {
-            Messages = chat.Messages.Select(context => context.Message.Text)
+            Messages = chat.Messages.Select(context => context.Details.Text)
         };
         return true; 
     }
@@ -44,15 +57,7 @@ public class DirectServerChatService(IChatRepository repository, UserContext cli
             return false;
         }
 
-        ChatMessageContext context = chat.Messages.Add(client, request.Text);
-
-        Task<ChatMessageEvent> task = subject
-            .FirstAsync(@event => @event.Chat.Id == chat.Id && @event.Message.Author.Id == server.Id)
-            .ToTask();
-
-        subject.OnNext(chat, context);
-
-        response = new() { Text = task.Result.Message.Message.Text };
+        response = new() { Text = SendChatMessage(chat, request.Text).Message.Details.Text };
         return true;
     }
 }
