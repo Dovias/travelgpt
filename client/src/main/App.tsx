@@ -3,7 +3,6 @@ import Input from "./components/Input";
 import MessageList from "./components/MessageList";
 import ExportChatButton from "./components/ExportChatButton";
 import NewChatButton from "./components/NewChatButton";
-import { promptInput } from "./resources/prompt";
 import { createChat, sendChatMessage } from "./functions/chat/server";
 import { ChatId, ChatMessageText } from "./types/chat";
 
@@ -15,7 +14,7 @@ function App() {
   const handleSendMessage = async (input: ChatMessageText) => {
     setMessages([...messages, input]);
     const response = await sendChatMessage(chatId!, {
-      text: promptInput + input
+      text: input
     });
     setMessages([
       ...messages,

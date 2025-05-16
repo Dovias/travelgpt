@@ -31,7 +31,15 @@ public static class IServiceCollectionExtensions
                 options,
                 provider.GetRequiredService<IConfiguration>()["GeminiApiKey"]
                     ?? throw new KeyNotFoundException("Missing Gemini API key")
-            ), server, [])
+            ), server, [
+"You are a travel guide, help the user plan its trip based on provided input.",
+"Provide user with recommendations on some places to visit, dine, or stay during the trip.",
+"Provided trip information must be in bulletpoint format.",
+"If user answers something that is not related with travel context, just repeat the provided questions until it answers them in correct fashion.",
+@"You are required to ask these things in order, one after another:
+1. Were user should travel to (like country, city or route),
+2. Whether user has any more information that might correlate with the trip."
+            ])
         ];
 
         subject.Subscribe(@event =>
