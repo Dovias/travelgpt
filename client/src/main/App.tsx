@@ -1,45 +1,36 @@
 import { useEffect, useState } from "react";
 import Input from "./components/Input";
 import MessageList from "./components/MessageList";
-import {
-  ChatCreationResponse,
-  SentChatMessageResponse,
-} from "./types/chatTypes";
-import fetchMessage from "./functions/fetchMessage";
 import ExportChatButton from "./components/ExportChatButton";
 import NewChatButton from "./components/NewChatButton";
 import { promptInput } from "./resources/prompt";
+import { createChat, sendChatMessage } from "./functions/chat/server";
+import { ChatId, ChatMessageText } from "./types/chat";
 
 function App() {
   const [disconnected, setDisconnected] = useState<boolean>(true);
-  const [messages, setMessages] = useState<string[]>([]);
-  const [chatId, setChatId] = useState<string>();
+  const [messages, setMessages] = useState<ChatMessageText[]>([]);
+  const [chatId, setChatId] = useState<ChatId>();
 
-  const handleSendMessage = async (input: string) => {
+  const handleSendMessage = async (input: ChatMessageText) => {
     setMessages([...messages, input]);
-    const response = await fetchMessage(promptInput + input, chatId);
+    const response = await sendChatMessage(chatId!, {
+      text: promptInput + input
+    });
     setMessages([
       ...messages,
       input,
-      ((await response.json()) as SentChatMessageResponse).text,
+      response.text,
     ]);
   };
 
   const initChat = async () => {
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        body: JSON.stringify({
-          text:
-            "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
-            new Date().getHours() +
-            " hours. And then ask where I want to travel?",
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const { id, text } = await createChat({
+        text: "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+              new Date().getHours() +
+              " hours. And then ask where I want to travel?"
       });
-      const { id, text } = (await response.json()) as ChatCreationResponse;
       setChatId(id);
       setMessages((prev) => [...prev, text]);
       setDisconnected(false);
