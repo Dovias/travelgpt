@@ -11,10 +11,7 @@ internal class Bootstrapper
             .AddDirectChat()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
-            .AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-            })
+            .AddRouting()
             .AddControllers();
 
         var app = builder.Build();

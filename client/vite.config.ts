@@ -6,18 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5198',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
-      },
-    }
-  },
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: './src/test/setup.ts',
+    setupFiles: 'src/test/setup.ts',
   }
 })

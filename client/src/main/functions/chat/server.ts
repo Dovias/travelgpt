@@ -1,13 +1,9 @@
-import { ChatId, ChatMessage } from "../../types/chat";
+import { ChatId, ChatMessage, CreateChatResponse, SendChatMessageResponse } from "../../types/chat";
 
-export type CreateChatResponse = {
-  id: string
-} & ChatMessage
-
-export type SendChatMessageResponse = ChatMessage;
+const API_SERVER_URL = import.meta.env.VITE_API_SERVER_URL;
 
 export async function createChat(message: ChatMessage) {
-  const response = await fetch("/api/chat", {
+  const response = await fetch(`${API_SERVER_URL}/chat`, {
     method: "POST",
     body: JSON.stringify(message),
     headers: {
@@ -19,13 +15,13 @@ export async function createChat(message: ChatMessage) {
 }
 
 export async function deleteChat(id: ChatId) {
-  await fetch(`/api/chat/${id}`, {
+  await fetch(`${API_SERVER_URL}/chat/${id}`, {
     method: "DELETE"
   });
 }
 
 export async function sendChatMessage(id: ChatId, message: ChatMessage) {
-  const response = await fetch(`/api/chat/${id}`, {
+  const response = await fetch(`${API_SERVER_URL}/chat/${id}`, {
     method: "POST",
     body: JSON.stringify(message),
     headers: {

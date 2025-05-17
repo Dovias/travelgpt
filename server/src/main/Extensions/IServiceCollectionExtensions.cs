@@ -29,7 +29,7 @@ public static class IServiceCollectionExtensions
             new LlmChatResponseStep(new GeminiLlmClient(
                 new HttpClient(),
                 options,
-                provider.GetRequiredService<IConfiguration>()["GeminiApiKey"]
+                provider.GetRequiredService<IConfiguration>()["GEMINI_API_KEY"]
                     ?? throw new KeyNotFoundException("Missing Gemini API key")
             ), server, [
 "You are a travel guide, help the user plan its trip based on provided input.",

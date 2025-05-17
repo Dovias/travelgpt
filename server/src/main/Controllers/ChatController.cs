@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using TravelGPT.Server.Dtos.Chat;
 using TravelGPT.Server.Services.Chat;
 
-namespace TravelGPT.Server.Controllers.Chat;
+namespace TravelGPT.Server.Controllers;
 
 [ApiController]
 [Route("/chat")]
-public class DirectChatController(IDirectChatService service) : ControllerBase
+public class ChatController(IDirectChatService service) : ControllerBase
 {
     [HttpPost]
     public IActionResult CreateChat(ChatCreationRequest request)
