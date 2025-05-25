@@ -71,6 +71,6 @@ jobs:
       - name: Run client tests
         run: npm run test:integration --prefix client
       - name: Run server tests
-        run: dotnet test src/tests --filter Integration
+        run: dotnet test server/src/tests --filter Integration
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
