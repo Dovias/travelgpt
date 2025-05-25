@@ -38,7 +38,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Run unit tests
-        run: dotnet test
+        run: dotnet test src/tests --filter Unit
       - name: Build artifact
         run: dotnet publish src/main --artifacts-path build
       - name: Upload build artifact
@@ -71,6 +71,6 @@ jobs:
       - name: Run client tests
         run: npm run test:integration --prefix client
       - name: Run server tests
-        run: dotnet test server
+        run: dotnet test src/tests --filter Integration
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
