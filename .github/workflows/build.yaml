@@ -1,9 +1,9 @@
 name: Build
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main, dev ]
+    branches: [main, dev]
 jobs:
   frontend:
     runs-on: ubuntu-latest
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: "20.x"
       - run: npm ci
       - name: Run unit tests
         run: npm run test:unit
@@ -32,20 +32,20 @@ jobs:
       run:
         working-directory: ./server
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Run unit tests
-      run: dotnet test
-    - name: Build artifact
-      run: dotnet publish src/main --artifacts-path build
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: travelgpt-server
-        path: ./server/build/publish/main/release
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Run unit tests
+        run: dotnet test
+      - name: Build artifact
+        run: dotnet publish src/main --artifacts-path build
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: travelgpt-server
+          path: ./server/build/publish/main/release
   integration:
     needs: [frontend, backend]
     environment: Integration
@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: "20.x"
       - run: npm i -g wait-on
       - name: Download server artifact
         uses: actions/download-artifact@v4
@@ -68,5 +68,9 @@ jobs:
           VITE_API_SERVER_URL: http://localhost:5000
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       - run: npm ci --prefix client
-      - name: Run tests
+      - name: Run client tests
         run: npm run test:integration --prefix client
+      - name: Run server tests
+        run: dotnet test server
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
