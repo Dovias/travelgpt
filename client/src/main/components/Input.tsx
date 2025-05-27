@@ -14,7 +14,7 @@ function Input({ onSendMessage, disconnected }: Props) {
   };
 
   return (
-    <div className="rounded-lg m-4 p-4 bg-neutral-900 absolute bottom-0 left-0 right-0">
+    <div className="rounded-lg m-4 p-4 bg-neutral-900 sticky bottom-0 left-0 right-0">
       <div className="max-w-5xl m-auto flex gap-4">
         <input
           type="text"

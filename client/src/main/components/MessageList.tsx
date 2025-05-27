@@ -4,7 +4,7 @@ interface Props {
 
 function MessageList({ messages }: Props) {
   return (
-    <div className="flex flex-col gap-4 overflow-auto p-8">
+    <div className="flex flex-col gap-4 overflow-auto h-full p-8">
       {messages.map((message, index) => (
         <div
           key={index}
