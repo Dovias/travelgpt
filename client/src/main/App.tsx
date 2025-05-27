@@ -58,10 +58,10 @@ function App() {
         ></ExportChatButton>
         {/* <DarkModeToggle></DarkModeToggle> */}
       </div>
-      <div className="absolute bottom-2 right-4 text-xs overflow-auto text-neutral-400"><p>The information presented may not always be accurate.</p><p>We recommend double-checking before booking.</p></div>
+      <div className="absolute bottom-2 right-4 text-xs text-neutral-400"><p>The information presented may not always be accurate.</p><p>We recommend double-checking before booking.</p></div>
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col h-full overflow-auto max-w-5xl mx-auto relative">
-          <div className="text-center m-16">
+          <div className="text-center m-8">
             <h1 className="m-1 text-5xl font-bold">Travel GPT 🗺️</h1>
             <p className="m-1">Your personal travel assistant</p>
           </div>
