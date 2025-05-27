@@ -1,7 +1,6 @@
 import { describe, it } from "vitest";
-import { ChatMessage, CreateChatResponseSchema, SendChatMessageResponseSchema } from "../../main/types/chat";
+import { ChatMessage, SendChatMessageResponseSchema } from "../../main/types/chat";
 import { createChat, sendChatMessage } from "../../main/functions/chat/server";
-import { expect } from "vitest";
 
 describe("Chat API validation", () => {
     it('Send multiple messages in one chat', async () => {
