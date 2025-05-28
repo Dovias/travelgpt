@@ -3,7 +3,8 @@ import {
   ChatMessage,
   ChatMessageId,
   ChatCreateResponse,
-  ChatEditMessageResponse,
+  ChatMessageEditResponse,
+  ChatMessageSendResponse,
 } from "../../types/chat";
 
 const API_SERVER_URL = import.meta.env.VITE_API_SERVER_URL;
@@ -31,7 +32,7 @@ export async function deleteChat(id: ChatId) {
 export async function sendChatMessage(
   chatId: ChatId,
   message: ChatMessage
-): Promise<ChatMessage> {
+): Promise<ChatMessageSendResponse> {
   const response = await fetch(`${API_SERVER_URL}/chat/${chatId}`, {
     method: "POST",
     body: message,
@@ -47,7 +48,7 @@ export async function editChatMessage(
   chatId: ChatId,
   chatMessageId: ChatMessageId,
   message: ChatMessage
-): Promise<ChatEditMessageResponse> {
+): Promise<ChatMessageEditResponse> {
   const response = await fetch(
     `${API_SERVER_URL}/chat/${chatId}/${chatMessageId}`,
     {
