@@ -1,16 +1,8 @@
-using System.Reactive.Subjects;
-using TravelGPT.Server.Extensions.Chat;
-using TravelGPT.Server.Models.Chat;
-using TravelGPT.Server.Models.Chat.Response;
-using TravelGPT.Server.Models.Chat.Dictionary;
-using TravelGPT.Server.Models.Llm.Gemini;
-using TravelGPT.Server.Models.User;
-using TravelGPT.Server.Services.Chat;
-
 namespace TravelGPT.Server.Extensions;
 
 public static class IServiceCollectionExtensions
 {
+    /*
     public static IServiceCollection AddDirectChat(this IServiceCollection collection)
     => collection.AddSingleton<IDirectChatService>(provider =>
     {
@@ -37,7 +29,7 @@ public static class IServiceCollectionExtensions
 
         subject.Subscribe(@event =>
         {
-            ChatContext chat = @event.Chat;
+            ChatConversationContext chat = @event.Chat;
             ChatMessageContext message = @event.Message;
 
             if (message.Author.Id == server.Id) return;
@@ -52,8 +44,9 @@ public static class IServiceCollectionExtensions
         });
 
         return new DirectServerChatService(
-            new DictionaryChatRepository(new Dictionary<Guid, ChatContext>()),
+            new DictionaryChatRepository(new Dictionary<Guid, ChatConversationContext>()),
             client, server, subject
         );
     });
+    */
 }

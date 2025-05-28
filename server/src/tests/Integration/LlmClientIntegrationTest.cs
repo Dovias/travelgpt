@@ -116,7 +116,7 @@ public class LlmClientIntegrationTest
     [DynamicData(nameof(ValidRequests))]
     public void Fetch_ReturnsValidResponse_WhenCalledWithValidRequest(LlmRequest request)
     {
-        _client.Fetch(request);
+        _client.FetchResponse(request);
     }
 
     [DataTestMethod]
@@ -125,7 +125,7 @@ public class LlmClientIntegrationTest
     {
         try
         {
-            _client.Fetch(request);
+            _client.FetchResponse(request);
         }
         catch (Exception)
         {

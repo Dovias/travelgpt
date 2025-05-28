@@ -15,7 +15,7 @@ public class GeminiLlmClient(string apiKey) : ILlmClient
         }
     };
 
-    public LlmResponse Fetch(LlmRequest request)
+    public LlmResponse FetchResponse(LlmRequest request)
     {
         HttpResponseMessage message = _client.PostAsJsonAsync(
             $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}",

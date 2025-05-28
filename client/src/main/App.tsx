@@ -4,34 +4,28 @@ import MessageList from "./components/MessageList";
 import ExportChatButton from "./components/ExportChatButton";
 import NewChatButton from "./components/NewChatButton";
 import { createChat, sendChatMessage } from "./functions/chat/server";
-import { ChatId, ChatMessageText } from "./types/chat";
+import { ChatId, ChatMessage } from "./types/chat";
 
 function App() {
   const [disconnected, setDisconnected] = useState<boolean>(true);
-  const [messages, setMessages] = useState<ChatMessageText[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatId, setChatId] = useState<ChatId>();
 
-  const handleSendMessage = async (input: ChatMessageText) => {
+  const handleSendMessage = async (input: ChatMessage) => {
     setMessages([...messages, input]);
-    const response = await sendChatMessage(chatId!, {
-      text: input
-    });
-    setMessages([
-      ...messages,
-      input,
-      response.text,
-    ]);
+    const response = await sendChatMessage(chatId!, input);
+    setMessages([...messages, input, response]);
   };
 
   const initChat = async () => {
     try {
-      const { id, text } = await createChat({
-        text: "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
-              new Date().getHours() +
-              " hours. And then ask where I want to travel?"
-      });
+      const { id, response } = await createChat(
+        "We're starting a conversation. Greet me ONLY THIS TIME AND NEVER AGAIN depending on the time of day it is, current time: " +
+          new Date().getHours() +
+          " hours. And then ask where I want to travel?"
+      );
       setChatId(id);
-      setMessages((prev) => [...prev, text]);
+      setMessages((prev) => [...prev, response]);
       setDisconnected(false);
     } catch {
       /* empty */

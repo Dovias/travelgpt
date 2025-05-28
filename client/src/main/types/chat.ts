@@ -1,31 +1,30 @@
 import { z } from "zod";
 
-export const ChatIdSchema = z.string().uuid();
+export const ChatIdSchema = z.string();
+export const ChatMessageIdSchema = z.number();
 
-export const ChatMessageTextSchema = z.string();
-
-export const ChatMessageSchema = z.object({
-  text: ChatMessageTextSchema
-});
+export const ChatMessageSchema = z.string();
+export const ChatResponseSchema = z.string();
 
 export const ChatSchema = z.object({
   id: ChatIdSchema,
-  messages: ChatMessageSchema.array()
+  messages: ChatMessageSchema.array(),
 });
 
-export const CreateChatResponseSchema = z.object({
+export const ChatCreateResponseSchema = z.object({
   id: ChatIdSchema,
-  text: ChatMessageTextSchema
-})
+  response: ChatMessageSchema,
+});
 
-export const SendChatMessageResponseSchema = z.object({
-  text: ChatMessageTextSchema
-})
+export const ChatEditMessageResponseSchema = ChatResponseSchema.array();
 
 export type ChatId = z.infer<typeof ChatIdSchema>;
-export type ChatMessageText = z.infer<typeof ChatMessageTextSchema>;
-export type ChatMessage = z.infer<typeof ChatMessageSchema>
+export type ChatMessageId = z.infer<typeof ChatMessageIdSchema>;
+export type ChatMessage = z.infer<typeof ChatMessageSchema>;
+export type ChatResponse = z.infer<typeof ChatResponseSchema>;
 export type Chat = z.infer<typeof ChatSchema>;
 
-export type CreateChatResponse = z.infer<typeof CreateChatResponseSchema>;
-export type SendChatMessageResponse = z.infer<typeof SendChatMessageResponseSchema>;
+export type ChatCreateResponse = z.infer<typeof ChatCreateResponseSchema>;
+export type ChatEditMessageResponse = z.infer<
+  typeof ChatEditMessageResponseSchema
+>;

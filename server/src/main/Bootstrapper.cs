@@ -1,4 +1,8 @@
-using TravelGPT.Server.Extensions;
+using TravelGPT.Server.Factories.Chat;
+using TravelGPT.Server.Formatters;
+using TravelGPT.Server.Models.Llm.Gemini;
+using TravelGPT.Server.Repositories.Chat;
+using TravelGPT.Server.Services;
 
 namespace TravelGPT.Server;
 
@@ -8,11 +12,13 @@ internal class Bootstrapper
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddDirectChat()
+            .AddSingleton(new ChatService(new InMemoryChatRepository(), new TravelChatConversationResponseFactory(
+                new GeminiLlmClient(builder.Configuration["GEMINI_API_KEY"] ?? throw new KeyNotFoundException("Missing Gemini API key"))
+            )))
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddRouting()
-            .AddControllers();
+            .AddControllers(options => options.InputFormatters.Add(new PlainTextSingleValueFormatter()));
 
         var app = builder.Build();
 
