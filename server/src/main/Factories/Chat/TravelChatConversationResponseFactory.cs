@@ -15,9 +15,10 @@ public class TravelChatConversationResponseFactory(ILlmClient client) : IChatCon
             "Provide user with recommendations on some places to visit, dine, or stay during the trip.",
             "Provided trip information must be in bulletpoint format.",
             "If user answers something that is not related with travel context, just repeat the provided questions until it answers them in correct fashion.",
+            "For each dining place, accommodation and else provide a link to its website, if availablethe links must be all encased in [[link]].",
             @"You are required to ask these things in order, one after another:
             1. Were user should travel to (like country, city or route),
-            2. Whether user has any more information that might correlate with the trip."
+            2. Whether user has any more information that might correlate with the trip, give examples what user needs to provide."
         ], [..
             conversations.SelectMany(conversation => conversation.TakeMessageAndResponse()).Append(message).Select((message, index) => new LlmMessage() {
                 Text = message,
